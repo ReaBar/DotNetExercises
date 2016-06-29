@@ -1,0 +1,7 @@
+\\mac\home\documents\visual studio 2015\Projects\MailSystem\MailSystem\bin\Debug\MailSystem.exe.config
+\\Mac\Home\Documents\Visual Studio 2015\Projects\Ex4\MailSystem\MailSystem\bin\Debug\MailSystem.exe.config
+\\Mac\Home\Documents\Visual Studio 2015\Projects\Ex4\MailSystem\MailSystem\bin\Debug\MailSystem.exe
+\\Mac\Home\Documents\Visual Studio 2015\Projects\Ex4\MailSystem\MailSystem\bin\Debug\MailSystem.pdb
+\\Mac\Home\Documents\Visual Studio 2015\Projects\Ex4\MailSystem\MailSystem\obj\Debug\MailSystem.csprojResolveAssemblyReference.cache
+\\Mac\Home\Documents\Visual Studio 2015\Projects\Ex4\MailSystem\MailSystem\obj\Debug\MailSystem.exe
+\\Mac\Home\Documents\Visual Studio 2015\Projects\Ex4\MailSystem\MailSystem\obj\Debug\MailSystem.pdb
