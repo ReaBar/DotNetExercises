@@ -65,5 +65,16 @@ namespace CustomersApp
                 return false;
             }
         }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Name?.GetHashCode() ?? 0;
+                hashCode = (hashCode*397) ^ (Address?.GetHashCode() ?? 0);
+                hashCode = (hashCode*397) ^ ID;
+                return hashCode;
+            }
+        }
     }
 }
