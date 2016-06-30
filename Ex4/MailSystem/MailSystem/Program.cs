@@ -1,5 +1,4 @@
 ﻿using System;
-using MailSystem;
 using System.Threading;
 
 namespace MailSystem
@@ -9,26 +8,19 @@ namespace MailSystem
         private static Timer _timer;
         static void Main(string[] args)
         {
-            MailManager _mailManager = new MailManager();
-            _mailManager.MailArrived += PrintMail;
+            Program program = new Program();
+            MailManager mailManager = new MailManager();
+            mailManager.MailArrived += (sender, mailArrived) => { System.Console.WriteLine("The mail title is: {0} and the body: {1}", mailArrived.Title, mailArrived.Body); };
 
-            _mailManager.SimulatedMailArrived();
+            mailManager.SimulatedMailArrived();
 
-            _timer = new Timer(Callback, _mailManager, 1000, 1000);
+            _timer = new Timer(program.SimulateMailCallback, mailManager, 1000, 1000);
             Console.ReadLine();
         }
 
-        private static void Callback(object state)
+        private void SimulateMailCallback(object state)
         {
-            if(state != null && state is MailManager)
-            {
-               ((MailManager)state).SimulatedMailArrived();
-            }
-        }
-
-        static void PrintMail(object sender,MailArrivedEventArgs mailArrived)
-        {
-            System.Console.WriteLine("The mail title is: {0} and the body: {1}", mailArrived.Title, mailArrived.Body);
+            (state as MailManager)?.SimulatedMailArrived();
         }
     }
 }

@@ -6,9 +6,17 @@ namespace CustomersApp
 
     public class Customer : IComparable<Customer>, IEquatable<Customer>
     {
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public int ID { get; set; }
+
+        public Customer(string name, string address, int id)
+        {
+            this.Name = name;
+            this.Address = address;
+            this.ID = id;
+        }
+
+        public string Name { get;}
+        public string Address { get;}
+        public int ID { get;}
 
         public int CompareTo(Customer other)
         {

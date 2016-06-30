@@ -8,27 +8,27 @@ namespace MailSystem
         
         public void SimulatedMailArrived()
         {
-            OnMailArrived(new MailArrivedEventArgs("dummy title", "dummy body"));
+            OnMailArrived(new MailArrivedEventArgs("Dummy Data", "Dummy Data"));
         }
 
         protected virtual void OnMailArrived(MailArrivedEventArgs mail)
         {
-            if(MailArrived != null)
+            if(mail != null)
             {
-                MailArrived(this, mail);
+                MailArrived?.Invoke(this, mail);
             }
         }
     }
 
     public class MailArrivedEventArgs : EventArgs
     {
-        private string _title,_body;
         public MailArrivedEventArgs(string title,string body)
         {
-            _title = title;
-            _body = body;
+            Title = title;
+            Body = body;
         }
-        public string Title => _title;
-        public string Body => _body;
+        public string Title { get; }
+
+        public string Body { get; }
     }
 }

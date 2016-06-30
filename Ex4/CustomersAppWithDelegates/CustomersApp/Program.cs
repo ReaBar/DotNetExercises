@@ -8,27 +8,12 @@ namespace CustomersApp
     {
         static void Main(string[] args)
         {
-            InnerClass innerClass = new InnerClass();
+            Program program = new Program();
             List<Customer> customerArray = new List<Customer>();
-            Customer customer1 = new Customer();
-            Customer customer2 = new Customer();
-            Customer customer3 = new Customer();
-            Customer customer4 = new Customer();
-            customer1.Name = "Rea";
-            customer1.ID = 1234;
-            customer1.Address = "Tel Aviv";
-
-            customer2.Name = "Bar";
-            customer2.ID = 4321;
-            customer2.Address = "Kfar Saba";
-
-            customer3.Name = "test";
-            customer3.ID = 1;
-            customer3.Address = "test";
-
-            customer4.Name = "rea";
-            customer4.ID = 123;
-            customer4.Address = "Jerusalem";
+            Customer customer1 = new Customer("Rea","Tel Aviv",1234);
+            Customer customer2 = new Customer("Bar","Kfar Saba", 4321);
+            Customer customer3 = new Customer("test","test",1);
+            Customer customer4 = new Customer("rea","Jerusalem",123);
 
             customerArray.Add(customer2);
             customerArray.Add(customer4);
@@ -36,13 +21,13 @@ namespace CustomersApp
             customerArray.Add(customer1);
 
             Console.WriteLine("Customer Array: ");
-            innerClass.PrintCustomers(customerArray);
+            program.PrintCustomers(customerArray);
             customer3 = null;
 
             Console.WriteLine("Filtering customers by name - A to K:");
-            CustomFilter filterNameByAtoK = innerClass.FilterCustomersByNameAtoK;
+            CustomFilter filterNameByAtoK = program.FilterCustomersByNameAtoK;
             var filteredCustomers = GetCustomers(customerArray, filterNameByAtoK);
-            innerClass.PrintCustomers(filteredCustomers);
+            program.PrintCustomers(filteredCustomers);
 
             CustomFilter filterNameByLtoZ = delegate (Customer customer)
             {
@@ -60,7 +45,7 @@ namespace CustomersApp
             };
             Console.WriteLine("Filtering customers by name - L to Z:");
             filteredCustomers = GetCustomers(customerArray, filterNameByLtoZ);
-            innerClass.PrintCustomers(filteredCustomers);
+            program.PrintCustomers(filteredCustomers);
 
             CustomFilter filterCustomersById = customer =>
             {
@@ -76,7 +61,7 @@ namespace CustomersApp
 
             Console.WriteLine("Filtering customers by ID lower than 100:");
             filteredCustomers = GetCustomers(customerArray, filterCustomersById);
-            innerClass.PrintCustomers(filteredCustomers);
+            program.PrintCustomers(filteredCustomers);
         }
 
         static ICollection<Customer> GetCustomers(ICollection<Customer> customerCollection, CustomFilter customFilter)
@@ -91,10 +76,7 @@ namespace CustomersApp
             }
             return filteredCustomers;
         }
-    }
 
-    class InnerClass
-    {
         public void PrintCustomers(ICollection<Customer> customersCollection)
         {
             int index = 0;
