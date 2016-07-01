@@ -32,6 +32,7 @@ namespace Personnel
                 {
                     Console.WriteLine(lineOfText);
                 }
+                str.Close();
             }
         }
     }
