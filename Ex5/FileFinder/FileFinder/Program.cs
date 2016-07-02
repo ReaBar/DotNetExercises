@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace FileFinder
 {
@@ -8,65 +9,97 @@ namespace FileFinder
     {
         static void Main(string[] args)
         {
+            List<string> filesFound = new List<string>();
             string directory, file;
             if (args.Length == 2)
             {
-                if (args[0] is string)
+                if (args[0] is string && args[1] is string)
                 {
                     directory = args[0];
-                }
-
-                if (args[1] is string)
-                {
                     file = args[1];
+                    Program program = new Program();
+
+                    if (Directory.Exists(directory))
+                    {
+                        DirectoryInfo dir = new DirectoryInfo(directory);
+                        filesFound = program.FilesFinderRecursion(dir, file);
+                    }
                 }
             }
-        }
-
-        public void FilesFinder(string directory, string fileName)
-        {
-            if (Directory.Exists(directory))
+            else if (args.Length > 2)
             {
-                string[] filePaths = Directory.GetFiles(directory, fileName, SearchOption.AllDirectories);
-                foreach (var item in filePaths)
+                StringBuilder sb = new StringBuilder();
+                int count = 0;
+                for (int i = 0; i < args.Length - 1; i++)
                 {
-                    FileInfo fileInfo = new FileInfo(item);
-                    Console.WriteLine("file path: {0}, file length: {1} ",item,fileInfo.Length);
+                    if (args[i] is string)
+                    {
+                        sb.Append(args[i]);
+                        sb.Append(' ');
+                        count++;
+                    }
+                }
+                if (sb.Length != 0)
+                {
+                    Program program = new Program();
+                    file = args[count];
+                    directory = sb.ToString();
+                    if (Directory.Exists(directory))
+                    {
+                        DirectoryInfo dir = new DirectoryInfo(directory);
+                        filesFound = program.FilesFinderRecursion(dir, file);
+                    }
+                }
+            }
+
+            if (filesFound.Count > 0)
+            {
+                foreach (var fileFound in filesFound)
+                {
+                    Console.WriteLine(fileFound + ", file length: " + new FileInfo(fileFound).Length);
                 }
             }
         }
 
-        public List<string> FilesFinderRecursion(string directory, string fileName)
+        public List<string> FilesFinderRecursion(DirectoryInfo directory, string fileName)
         {
             List<string> fileList = new List<string>();
-            if (Directory.Exists(directory))
+
+            try
             {
-                string[] files = Directory.GetFiles(directory);
-
-                foreach (var file in files)
+                foreach (var file in directory.GetFiles())
                 {
-                    if (File.Exists(file))
+                    FileInfo fileInfo = new FileInfo(file.Name);
+                    string fname = fileInfo.Name;
+                    if (fname.Contains(fileName))
                     {
-                        FileInfo fileInfo = new FileInfo(file);
-                        string fname = fileInfo.Name;
-                        if (fname.Contains(fileName))
-                        {
-                            fileList.Add(file);
-                        }
-                    }
-
-                    else if (Directory.Exists(file))
-                    {
-                        fileList.AddRange(FilesFinderRecursion(file, fileName));
+                        fileList.Add(file.FullName);
                     }
                 }
 
-                if(fileList.Count != 0)
+                foreach (var dir in directory.GetDirectories())
                 {
-                    return fileList;
+                    var filesFound = FilesFinderRecursion(dir, fileName);
+                    if (filesFound != null)
+                    {
+                        fileList.AddRange(filesFound);
+                    }
                 }
-
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                Console.WriteLine("Caught UnauthorizedAccessException :\n" + e.Message);
                 return null;
+            }
+            catch (PathTooLongException e)
+            {
+                Console.WriteLine("Caught PathTooLongException :\n" + e.Message);
+                return null;
+            }
+
+            if (fileList.Count != 0)
+            {
+                return fileList;
             }
 
             return null;
