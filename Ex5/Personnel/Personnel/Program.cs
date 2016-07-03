@@ -8,7 +8,7 @@ namespace Personnel
     {
         static void Main(string[] args)
         {
-            string path = @"\\Mac\Home\Documents\Visual Studio 2015\Projects\Rea_Bar_DotNetExercises\Ex5\Personnel\Personnel\names.txt";
+            string path = @"..\..\names.txt";
             Program p = new Program();
             p.ReadDataFromFile(path);
         }
