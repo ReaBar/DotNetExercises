@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -24,10 +25,16 @@ namespace FileFinder
                         DirectoryInfo dir = new DirectoryInfo(directory);
                         filesFound = program.FilesFinderRecursion(dir, file);
                     }
+
+                    else
+                    {
+                        Console.WriteLine("Directory doesn't exist");
+                    }
                 }
             }
             else if (args.Length > 2)
             {
+                Console.WriteLine("args length: " + args.Length);
                 StringBuilder sb = new StringBuilder();
                 int count = 0;
                 for (int i = 0; i < args.Length - 1; i++)
@@ -49,15 +56,24 @@ namespace FileFinder
                         DirectoryInfo dir = new DirectoryInfo(directory);
                         filesFound = program.FilesFinderRecursion(dir, file);
                     }
+                    else
+                    {
+                        Console.WriteLine("Directory doesn't exist");
+                    }
                 }
             }
 
-            if (filesFound.Count > 0)
+            if (filesFound != null && filesFound.Count > 0)
             {
                 foreach (var fileFound in filesFound)
                 {
                     Console.WriteLine(fileFound + ", file length: " + new FileInfo(fileFound).Length);
                 }
+            }
+
+            else
+            {
+                Console.WriteLine("File not found");
             }
         }
 
