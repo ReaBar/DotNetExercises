@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -10,11 +9,11 @@ namespace FileFinder
     {
         static void Main(string[] args)
         {
-            List<string> filesFound = new List<string>();
-            string directory, file;
-            if (args.Length == 2)
+            if (!string.IsNullOrWhiteSpace(args[0]) && !string.IsNullOrWhiteSpace(args[1]))
             {
-                if (args[0] is string && args[1] is string)
+                List<string> filesFound = new List<string>();
+                string directory, file;
+                if (args.Length == 2)
                 {
                     directory = args[0];
                     file = args[1];
@@ -31,49 +30,50 @@ namespace FileFinder
                         Console.WriteLine("Directory doesn't exist");
                     }
                 }
-            }
-            else if (args.Length > 2)
-            {
-                Console.WriteLine("args length: " + args.Length);
-                StringBuilder sb = new StringBuilder();
-                int count = 0;
-                for (int i = 0; i < args.Length - 1; i++)
-                {
-                    if (args[i] is string)
-                    {
-                        sb.Append(args[i]);
-                        sb.Append(' ');
-                        count++;
-                    }
-                }
-                if (sb.Length != 0)
-                {
-                    Program program = new Program();
-                    file = args[count];
-                    directory = sb.ToString();
-                    if (Directory.Exists(directory))
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(directory);
-                        filesFound = program.FilesFinderRecursion(dir, file);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Directory doesn't exist");
-                    }
-                }
-            }
 
-            if (filesFound != null && filesFound.Count > 0)
-            {
-                foreach (var fileFound in filesFound)
+                else if (args.Length > 2)
                 {
-                    Console.WriteLine(fileFound + ", file length: " + new FileInfo(fileFound).Length);
+                    Console.WriteLine("args length: " + args.Length);
+                    StringBuilder sb = new StringBuilder();
+                    int count = 0;
+                    for (int i = 0; i < args.Length - 1; i++)
+                    {
+                        if (args[i] is string)
+                        {
+                            sb.Append(args[i]);
+                            sb.Append(' ');
+                            count++;
+                        }
+                    }
+                    if (sb.Length != 0)
+                    {
+                        Program program = new Program();
+                        file = args[count];
+                        directory = sb.ToString();
+                        if (Directory.Exists(directory))
+                        {
+                            DirectoryInfo dir = new DirectoryInfo(directory);
+                            filesFound = program.FilesFinderRecursion(dir, file);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Directory doesn't exist");
+                        }
+                    }
                 }
-            }
 
-            else
-            {
-                Console.WriteLine("File not found");
+                if (filesFound != null && filesFound.Count > 0)
+                {
+                    foreach (var fileFound in filesFound)
+                    {
+                        Console.WriteLine(fileFound + ", file length: " + new FileInfo(fileFound).Length);
+                    }
+                }
+
+                else
+                {
+                    Console.WriteLine("File not found");
+                }
             }
         }
 
