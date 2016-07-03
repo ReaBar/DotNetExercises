@@ -9,57 +9,17 @@ namespace FileFinder
     {
         static void Main(string[] args)
         {
-            if (!string.IsNullOrWhiteSpace(args[0]) && !string.IsNullOrWhiteSpace(args[1]))
+
+            List<string> filesFound = new List<string>();
+            if (args.Length == 2 && !string.IsNullOrWhiteSpace(args[0]) && !string.IsNullOrWhiteSpace(args[1]))
             {
-                List<string> filesFound = new List<string>();
-                string directory, file;
-                if (args.Length == 2)
+                if (Directory.Exists(args[0]))
                 {
-                    directory = args[0];
-                    file = args[1];
+                    string directory = args[0];
+                    string file = args[1];
                     Program program = new Program();
-
-                    if (Directory.Exists(directory))
-                    {
-                        DirectoryInfo dir = new DirectoryInfo(directory);
-                        filesFound = program.FilesFinderRecursion(dir, file);
-                    }
-
-                    else
-                    {
-                        Console.WriteLine("Directory doesn't exist");
-                    }
-                }
-
-                else if (args.Length > 2)
-                {
-                    Console.WriteLine("args length: " + args.Length);
-                    StringBuilder sb = new StringBuilder();
-                    int count = 0;
-                    for (int i = 0; i < args.Length - 1; i++)
-                    {
-                        if (args[i] is string)
-                        {
-                            sb.Append(args[i]);
-                            sb.Append(' ');
-                            count++;
-                        }
-                    }
-                    if (sb.Length != 0)
-                    {
-                        Program program = new Program();
-                        file = args[count];
-                        directory = sb.ToString();
-                        if (Directory.Exists(directory))
-                        {
-                            DirectoryInfo dir = new DirectoryInfo(directory);
-                            filesFound = program.FilesFinderRecursion(dir, file);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Directory doesn't exist");
-                        }
-                    }
+                    DirectoryInfo dir = new DirectoryInfo(directory);
+                    filesFound = program.FilesFinderRecursion(dir, file);
                 }
 
                 if (filesFound != null && filesFound.Count > 0)
@@ -72,8 +32,13 @@ namespace FileFinder
 
                 else
                 {
-                    Console.WriteLine("File not found");
+                    Console.WriteLine("File or Directory not found");
                 }
+            }
+
+            else
+            {
+                Console.WriteLine("Unacceptable arguments");
             }
         }
 
