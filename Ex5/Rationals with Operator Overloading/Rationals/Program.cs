@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Rationals {
     class Program
@@ -30,7 +26,7 @@ namespace Rationals {
             Console.WriteLine("Property thats returns double test: {0:N1}/{1:N1}",rat1.DoubleNumerator,rat1.DoubleDenominator);
 
             Rational rat6 = new Rational(8,0);
-            Console.WriteLine("rat6 initalize with 0 => {0}",rat6.ToString());
+            Console.WriteLine($"rat6 initalized with 0 => {rat6.ToString()}");
 
             Rational rat7 = new Rational(4,2);
             Rational rat8;

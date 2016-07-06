@@ -1,6 +1,4 @@
 using System;
-using System.Numerics;
-using System.Runtime.CompilerServices;
 
 namespace Rationals
 {
@@ -108,6 +106,18 @@ namespace Rationals
             return rat1.Mul(rat2);
         }
 
+        public static implicit operator Rational(int value)
+        {
+            return new Rational(value);
+        }
+
+        //TODO: create explicit operator
+
+        //public static explicit operator int(int value)
+        //{
+        //    return new Rational(value);
+        //}
+
         public override bool Equals(object obj)
         {
             Rational rat = (Rational) obj;
@@ -119,6 +129,8 @@ namespace Rationals
             }
             return false;
         }
+
+        //TODO: generate getHashCode
 
         public override string ToString()
         {
