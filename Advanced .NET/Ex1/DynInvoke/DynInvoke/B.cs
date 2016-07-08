@@ -10,7 +10,10 @@ namespace DynInvoke
     {
         public string Hello(string str)
         {
-            return str;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Bonjour ");
+            sb.Append(str);
+            return sb.ToString();
         }
     }
 }
