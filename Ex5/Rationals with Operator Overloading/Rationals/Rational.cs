@@ -35,6 +35,8 @@ namespace Rationals
 
         public double DoubleDenominator => Convert.ToDouble(_denominator);
 
+        public double DoubleRational => Convert.ToDouble(_numerator / _denominator);
+
         public Rational Add(int numerator, int denominator)
         {
             int newNumerator = (_numerator*denominator) + (_denominator*numerator);
@@ -106,17 +108,15 @@ namespace Rationals
             return rat1.Mul(rat2);
         }
 
-        public static implicit operator Rational(int value)
+        public static explicit operator Rational(int value)
         {
             return new Rational(value);
         }
 
-        //TODO: create explicit operator
-
-        //public static explicit operator int(int value)
-        //{
-        //    return new Rational(value);
-        //}
+        public static implicit operator double(Rational rat)
+        {
+            return rat.DoubleRational;
+        }
 
         public override bool Equals(object obj)
         {
