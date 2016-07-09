@@ -120,17 +120,24 @@ namespace Rationals
 
         public override bool Equals(object obj)
         {
-            Rational rat = (Rational) obj;
-            this.Reduce();
-            rat.Reduce();
-            if(_numerator == rat.Numerator && _denominator == rat.Denominator)
+            if (obj is Rational)
             {
-                return true;
+                var rat = (Rational)obj;
+                this.Reduce();
+                rat.Reduce();
+                return _numerator == rat.Numerator && _denominator == rat.Denominator;
             }
+
             return false;
         }
 
-        //TODO: generate getHashCode
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_numerator*397) ^ _denominator;
+            }
+        }
 
         public override string ToString()
         {

@@ -15,12 +15,13 @@ namespace DynInvoke
             InvokeHello(c, "Rea");
         }
 
-        public static void InvokeHello(Object obj, string str)
+        public static void InvokeHello(object obj, string str)
         {
-            if(obj != null && obj.GetType().GetMethod("Hello") != null)
+            if(obj?.GetType().GetMethod("Hello") != null)
             {
                 var result = obj.GetType().GetMethod("Hello").Invoke(obj, new object[] { str });
-                if (result is string && !string.IsNullOrWhiteSpace((string)result))
+                var inputStr = result as string;
+                if (!string.IsNullOrWhiteSpace(inputStr))
                 {
                     Console.WriteLine(result);
                 }

@@ -7,31 +7,39 @@ namespace AttribDemo
     {
         public bool AnalyzeAssembly(Assembly assembly)
         {
-            bool result = true;
-            Type[] asmType = assembly.GetTypes();
-            foreach (var type in asmType)
+            if (assembly != null)
             {
-                object[] attributesInType = type.GetCustomAttributes(typeof(CodeReviewAttribute), false);
-                if (attributesInType.Length > 0)
+                bool result = true;
+                Type[] asmType = assembly.GetTypes();
+                foreach (var type in asmType)
                 {
-                    foreach (var codeRevewAttribute in attributesInType)
+                    object[] attributesInType = type.GetCustomAttributes(typeof(CodeReviewAttribute), false);
+                    if (attributesInType.Length > 0)
                     {
-                        CodeReviewAttribute att = (CodeReviewAttribute)codeRevewAttribute;
-                        Console.WriteLine($"Reviewer name: {att.ReviewrName}, Review date: {att.ReviewDate}, Code Approved: {att.CodeApproved}");
-                        if (att.CodeApproved == false)
+                        foreach (var codeRevewAttribute in attributesInType)
                         {
-                            result = false;
+                            CodeReviewAttribute att = (CodeReviewAttribute) codeRevewAttribute;
+                            Console.WriteLine(
+                                $"Reviewer name: {att.ReviewrName}, Review date: {att.ReviewDate}, Code Approved: {att.CodeApproved}");
+                            if (att.CodeApproved == false)
+                            {
+                                result = false;
+                            }
                         }
                     }
                 }
-            }
 
-            if (asmType == null || asmType.Length == 0)
+                if (asmType == null || asmType.Length == 0)
+                {
+                    return false;
+                }
+
+                return result;
+            }
+            else
             {
                 return false;
             }
-
-            return result;
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AttribDemo
+﻿namespace AttribDemo
 {
     [System.AttributeUsage(System.AttributeTargets.Class |
                        System.AttributeTargets.Struct,
@@ -12,19 +6,15 @@ namespace AttribDemo
 
     class CodeReviewAttribute : System.Attribute
     {
-        private string reviewrName;
-        private string reviewDate;
-        private bool codeApproved;
-
         public CodeReviewAttribute(string name, string date, bool codeApprove)
         {
-            reviewrName = name;
-            reviewDate = date;
-            codeApproved = codeApprove;
+            ReviewrName = name;
+            ReviewDate = date;
+            CodeApproved = codeApprove;
         }
 
-        public string ReviewrName => reviewrName;
-        public string ReviewDate => reviewDate;
-        public bool CodeApproved => codeApproved;
+        public string ReviewrName { get; }
+        public string ReviewDate { get; }
+        public bool CodeApproved { get; }
     }
 }
