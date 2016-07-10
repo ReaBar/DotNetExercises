@@ -1,8 +1,8 @@
 ﻿namespace GameCore
 {
-    interface IPlayer
+    public interface IPlayer
     {
-        string PlayerColor { get; }
+        GameCheckers PlayerColor { get; }
         void MakeMove(int x, int y);
     }
 }

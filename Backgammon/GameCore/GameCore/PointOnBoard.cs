@@ -5,18 +5,18 @@ namespace GameCore
     public class PointOnBoard
     {
         public int AmountOfCheckers { get; private set; }
-        public GameCharacter GameCharacterOnSpot { get; private set; }
+        public GameCheckers GameCheckersOnSpot { get; private set; }
 
-        public PointOnBoard(int amountOfCheckers, GameCharacter gameCharacterColor)
+        public PointOnBoard(int amountOfCheckers, GameCheckers gameCheckersColor)
         {
             AmountOfCheckers = amountOfCheckers;
-            GameCharacterOnSpot = gameCharacterColor;
+            GameCheckersOnSpot = gameCheckersColor;
         }
 
         public PointOnBoard()
         {
             AmountOfCheckers = 0;
-            GameCharacterOnSpot = GameCharacter.Empty;
+            GameCheckersOnSpot = GameCheckers.Empty;
         }
 
         public bool RemoveCheckerFromSpot()
@@ -26,7 +26,7 @@ namespace GameCore
                 AmountOfCheckers--;
                 if (AmountOfCheckers == 0)
                 {
-                    GameCharacterOnSpot = GameCharacter.Empty;
+                    GameCheckersOnSpot = GameCheckers.Empty;
                 }
 
                 return true;
@@ -40,9 +40,9 @@ namespace GameCore
             AmountOfCheckers++;
         }
 
-        public void IncreaseAmountOfCheckers(GameCharacter color)
+        public void IncreaseAmountOfCheckers(GameCheckers color)
         {
-            GameCharacterOnSpot = color;
+            GameCheckersOnSpot = color;
             AmountOfCheckers = 1;
         }
     }

@@ -15,11 +15,13 @@ namespace GameCore
         public bool IsMoveLegal(int x, int y)
         {
             //TODO generate this method
+            return false;
         }
 
         public bool IsMoveLegal(int x)
         {
             //TODO generate this method
+            return false;
         }
 
         public void makeMove()

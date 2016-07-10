@@ -7,6 +7,8 @@ namespace GameCore
     {
         public int BoardSize() => 24;
         private PointOnBoard[] pointsOnBoard = new PointOnBoard[24];
+        private List<GameCheckers> GameCheckersOnBar { get; set; }
+
         public GameBoard()
         {
             InitializeBoardWithGameCharacters();
@@ -20,32 +22,32 @@ namespace GameCore
             {
                 if (i == 0)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(2,GameCharacter.Red);
+                    pointsOnBoard[i] = new PointOnBoard(2,GameCheckers.Red);
                 }
 
                 else if (i == 5 || i == 12)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(5,GameCharacter.White);
+                    pointsOnBoard[i] = new PointOnBoard(5,GameCheckers.White);
                 }
 
                 else if (i == 7)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(3,GameCharacter.White);
+                    pointsOnBoard[i] = new PointOnBoard(3,GameCheckers.White);
                 }
 
                 else if (i == 11 || i == 18)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(5, GameCharacter.Red);
+                    pointsOnBoard[i] = new PointOnBoard(5, GameCheckers.Red);
                 }
 
                 else if (i == 16)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(3, GameCharacter.Red);
+                    pointsOnBoard[i] = new PointOnBoard(3, GameCheckers.Red);
                 }
 
                 else if (i == 23)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(2, GameCharacter.White);
+                    pointsOnBoard[i] = new PointOnBoard(2, GameCheckers.White);
                 }
 
                 else

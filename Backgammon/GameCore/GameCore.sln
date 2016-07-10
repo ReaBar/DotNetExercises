@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCore", "GameCore\GameCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UICore", "..\UICore\UICore\UICore.csproj", "{42C588CC-D43B-43B0-B2F3-DD5513432DB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgammonDriver", "..\BackgammonDriver\BackgammonDriver.csproj", "{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{42C588CC-D43B-43B0-B2F3-DD5513432DB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42C588CC-D43B-43B0-B2F3-DD5513432DB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42C588CC-D43B-43B0-B2F3-DD5513432DB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

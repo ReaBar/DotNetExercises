@@ -2,20 +2,20 @@
 
 namespace GameCore
 {
-    public enum GameCharacter
+    public enum GameCheckers
     {
         White,
         Red,
         Empty
     }
 
-    class GameController
+    public class GameController : IGameController
     {
         private Move _gameMove;
         private IBoardState _gameBoard = new GameBoard();
         private IPlayer _whitePlayer;
         private IPlayer _redPlayer;
-        private GameCharacter _turn;
+        private GameCheckers _turn;
 
         public GameController(IPlayer whitePlayer, IPlayer redPlayer)
         {
