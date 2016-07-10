@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GameCore
 {
-    interface IBoardState
+    public interface IBoardState
     {
-        List<int>[] BoardState { get; set; }
+        PointOnBoard[] BoardState { get;}
+        int BoardSize();
     }
 }

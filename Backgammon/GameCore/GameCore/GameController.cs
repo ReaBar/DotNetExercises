@@ -1,0 +1,32 @@
+﻿using System;
+
+namespace GameCore
+{
+    public enum GameCharacter
+    {
+        White,
+        Red,
+        Empty
+    }
+
+    class GameController
+    {
+        private Move _gameMove;
+        private IBoardState _gameBoard = new GameBoard();
+        private IPlayer _whitePlayer;
+        private IPlayer _redPlayer;
+        private GameCharacter _turn;
+
+        public GameController(IPlayer whitePlayer, IPlayer redPlayer)
+        {
+            _whitePlayer = whitePlayer;
+            _redPlayer = redPlayer;
+            _gameMove = new Move(_gameBoard);
+        }
+
+        public void StartNewGame()
+        {
+            
+        }
+    }
+}
