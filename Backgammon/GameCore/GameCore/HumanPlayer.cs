@@ -8,25 +8,24 @@ namespace GameCore
 {
     public class HumanPlayer : IPlayer
     {
-        public GameCheckers PlayerColor { get; private set; }
-
-        public HumanPlayer(string checkerColor)
+        public GameCheckers GameCheckerColor { get; private set; }
+        public ConsoleColor GameCheckerConsoleColor { get; private set; }
+        public HumanPlayer(GameCheckers checkerColor)
         {
-            if (!string.IsNullOrWhiteSpace(checkerColor))
+            switch (checkerColor)
             {
-                var color = checkerColor.ToLower();
-                if (color.Equals("white"))
-                {
-                    PlayerColor = GameCheckers.White;
-                }
-                else if (color.Equals("red"))
-                {
-                    PlayerColor = GameCheckers.Red;
-                }
-            }
-            else
-            {
-                PlayerColor = GameCheckers.Empty;
+                case GameCheckers.White:
+                    GameCheckerColor = GameCheckers.White;
+                    GameCheckerConsoleColor = ConsoleColor.White;
+                    break;
+                case GameCheckers.Red:
+                    GameCheckerColor = GameCheckers.Red;
+                    GameCheckerConsoleColor = ConsoleColor.Red;
+                    break;
+                default:
+                    GameCheckerColor = GameCheckers.Empty;
+                    //TODO think about throwing an exception in this case
+                    break;
             }
         }
         public void MakeMove(int x, int y)
