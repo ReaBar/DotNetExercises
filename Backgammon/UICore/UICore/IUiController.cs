@@ -4,8 +4,8 @@ namespace UICore
 {
     public interface IUiController
     {
-        void PaintBoard();
+        void PaintBoard(IBoardState boardState = null);
         void NextTurn();
-        void StartGame();
+        void StartGame(IBoardState boardState);
     }
 }
