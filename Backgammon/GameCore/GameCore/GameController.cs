@@ -36,13 +36,13 @@ namespace GameCore
 
         public int RollFirstDice()
         {
-            _firstDice = _dice.FirstDice;
+            _firstDice = _dice.RollFirstDice;
             return _firstDice;
         }
 
         public int RollSecondDice()
         {
-            _secondDice = _dice.SecondDice;
+            _secondDice = _dice.RollSecondDice;
             return _secondDice;
         }
 
