@@ -3,18 +3,20 @@ using System.Collections.Generic;
 
 namespace GameCore
 {
-    class GameBoard : IBoardState
+    class BoardState : IBoardState
     {
         public int BoardSize() => 24;
         private PointOnBoard[] pointsOnBoard = new PointOnBoard[24];
-        private List<GameCheckers> GameCheckersOnBar { get; set; }
+        internal List<GameCheckers> GameCheckersOnBar { get; set; }
 
-        public GameBoard()
+        public BoardState()
         {
             InitializeBoardWithGameCharacters();
         }
 
-        public PointOnBoard[] BoardState => pointsOnBoard;
+        public PointOnBoard[] BoardPointsState => pointsOnBoard;
+
+        List<GameCheckers> IBoardState.GameCheckersOnBar => GameCheckersOnBar;
 
         private void InitializeBoardWithGameCharacters()
         {

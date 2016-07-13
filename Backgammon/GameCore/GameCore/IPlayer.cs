@@ -5,7 +5,8 @@ namespace GameCore
     public interface IPlayer
     {
         GameCheckers GameCheckerColor { get; }
+        PlayerCondition PlayerState { get; set; }
         ConsoleColor GameCheckerConsoleColor { get; }
-        void MakeMove(int x, int y);
+        void MakeMove(int source, int destination);
     }
 }

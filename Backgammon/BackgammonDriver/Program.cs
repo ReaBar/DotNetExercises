@@ -20,7 +20,7 @@ namespace BackgammonDriver
             IPlayer redPlayer = new HumanPlayer(GameCheckers.Red);
             IGameController gameController = new GameController(whitePlayer,redPlayer);
             IUiController uiController = new UiController(gameController);
-            uiController.StartGame(gameController.GameBoardState);
+            uiController.StartGame();
         }
     }
 }

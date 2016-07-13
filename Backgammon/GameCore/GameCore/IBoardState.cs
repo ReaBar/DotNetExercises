@@ -5,7 +5,8 @@ namespace GameCore
 {
     public interface IBoardState
     {
-        PointOnBoard[] BoardState { get;}
+        PointOnBoard[] BoardPointsState { get;}
         int BoardSize();
+        List<GameCheckers> GameCheckersOnBar { get; }
     }
 }

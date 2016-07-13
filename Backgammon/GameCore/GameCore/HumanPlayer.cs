@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GameCore
 {
     public class HumanPlayer : IPlayer
     {
-        public GameCheckers GameCheckerColor { get; private set; }
-        public ConsoleColor GameCheckerConsoleColor { get; private set; }
+        public GameCheckers GameCheckerColor { get; }
+        public PlayerCondition PlayerState { get; set; }
+        public ConsoleColor GameCheckerConsoleColor { get; }
         public HumanPlayer(GameCheckers checkerColor)
         {
+            PlayerState = PlayerCondition.Regular;
+
             switch (checkerColor)
             {
                 case GameCheckers.White:
@@ -28,7 +27,7 @@ namespace GameCore
                     break;
             }
         }
-        public void MakeMove(int x, int y)
+        public void MakeMove(int source, int destination)
         {
             throw new NotImplementedException();
         }

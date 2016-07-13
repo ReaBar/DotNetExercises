@@ -48,7 +48,7 @@
   <ItemGroup>
     <Compile Include="Dice.cs" />
     <Compile Include="GameController.cs" />
-    <Compile Include="GameBoard.cs" />
+    <Compile Include="BoardState.cs" />
     <Compile Include="HumanPlayer.cs" />
     <Compile Include="IGameController.cs" />
     <Compile Include="IPlayer.cs" />
