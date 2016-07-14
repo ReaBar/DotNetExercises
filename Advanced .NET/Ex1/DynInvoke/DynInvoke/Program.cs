@@ -17,7 +17,7 @@ namespace DynInvoke
 
         public static void InvokeHello(object obj, string str)
         {
-            if(obj?.GetType().GetMethod("Hello") != null)
+            if(obj?.GetType().GetMethod("Hello") != null && !string.IsNullOrWhiteSpace(str))
             {
                 var result = obj.GetType().GetMethod("Hello").Invoke(obj, new object[] { str });
                 var inputStr = result as string;
