@@ -29,7 +29,7 @@ namespace AttribDemo
                     }
                 }
 
-                if (asmType == null || asmType.Length == 0)
+                if (asmType.Length == 0)
                 {
                     return false;
                 }

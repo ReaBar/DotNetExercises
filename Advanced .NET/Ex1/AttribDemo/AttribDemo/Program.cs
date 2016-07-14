@@ -8,7 +8,10 @@ namespace AttribDemo
         static void Main(string[] args)
         {
             AssemblyAnalyzer asmAnalyzer = new AssemblyAnalyzer();
-            asmAnalyzer.AnalyzeAssembly(Assembly.GetExecutingAssembly());
+            var codeApproved = asmAnalyzer.AnalyzeAssembly(Assembly.GetExecutingAssembly())
+                ? "All the code was approved"
+                : "Not all the code was approved";
+            Console.WriteLine(codeApproved);
         }
     }
 }
