@@ -23,7 +23,7 @@ namespace GameCore
         private IPlayer _whitePlayer;
         private IPlayer _redPlayer;
         private readonly Dice _dice;
-        private int _firstDice, _secondDice;
+        private IPlayer _currentPlayer;
 
         public GameController(IPlayer whitePlayer, IPlayer redPlayer)
         {
@@ -33,27 +33,65 @@ namespace GameCore
             _redPlayer = redPlayer;
             _gameMove = new Move(_gameBoard);
         }
-
-        public int RollFirstDice()
-        {
-            _firstDice = _dice.RollFirstDice;
-            return _firstDice;
-        }
-
-        public int RollSecondDice()
-        {
-            _secondDice = _dice.RollSecondDice;
-            return _secondDice;
-        }
+        public int FirstDice => _dice.FirstDice;
+        public int SecondDice => _dice.SecondDice;
+        public int RollFirstDice => _dice.RollFirstDice;
+        public int RollSecondDice => _dice.RollSecondDice;
 
         public IBoardState GameBoardState => _gameBoard;
 
-        public IBoardState MakeMove(IBoardState boardState,IPlayer player, int source, int destination)
+        public IPlayer CurrentPlayer => _currentPlayer;
+
+        public void SetFirstPlayer(GameCheckers player)
         {
-            _gameBoard =_gameMove.MakeMove(_gameBoard,player,source,destination);
-            return _gameBoard;
+            if (player.Equals(GameCheckers.White))
+            {
+                _currentPlayer = _whitePlayer;
+            }
+
+            else
+            {
+                _currentPlayer = _redPlayer;
+            }
         }
 
-        public GameCheckers WhosTurn { get; set; }
+        public bool MakeMove(IPlayer player, int source, int destination)
+        {
+            if (player.GameCheckerColor.Equals(GameCheckers.White))
+            {
+                if (source - destination != FirstDice || source - destination != SecondDice)
+                {
+                    return false;
+                }
+            }
+
+            if (player.GameCheckerColor.Equals(GameCheckers.Red))
+            {
+                if (destination - source != FirstDice || destination - source != SecondDice)
+                {
+                    return false;
+                }
+            }
+            source--;
+            destination--;
+            int numOfTurns = 2;
+            if (FirstDice == SecondDice)
+            {
+                numOfTurns = 4;
+            }
+
+            if (_gameMove.IsMoveLegal(_gameBoard, player, source, destination))
+            {
+                numOfTurns--;
+                _gameBoard = _gameMove.MakeMove(_gameBoard, player, source, destination);
+                if (numOfTurns == 0)
+                {
+                    _currentPlayer = player == _whitePlayer ? _redPlayer : _whitePlayer;
+                }
+                return true;
+            }
+            return false;
+        }
+
     }
 }

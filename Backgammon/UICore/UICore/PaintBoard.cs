@@ -88,7 +88,7 @@ namespace UICore
         {
             int bottomColumn = 41;
             int topColumn = 1;
-
+            BuildBoard();
             for (int i = 0; i < boardState.BoardPointsState.Length; i++)
             {
                 if (i < boardState.BoardPointsState.Length/2)

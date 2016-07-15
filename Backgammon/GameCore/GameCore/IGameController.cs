@@ -1,12 +1,14 @@
-﻿
-namespace GameCore
+﻿namespace GameCore
 {
     public interface IGameController
     {
         IBoardState GameBoardState { get; }
-        int RollFirstDice();
-        int RollSecondDice();
-        IBoardState MakeMove(IBoardState boardState, IPlayer player, int source, int destination);
-        GameCheckers WhosTurn { get; set; }
+        int RollFirstDice { get; }
+        int RollSecondDice { get; }
+        int FirstDice { get; }
+        int SecondDice { get; }
+        bool MakeMove(IPlayer player, int source, int destination);
+        IPlayer CurrentPlayer { get;}
+        void SetFirstPlayer(GameCheckers gameCheckerColor);
     }
 }

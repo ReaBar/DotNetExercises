@@ -23,7 +23,7 @@ namespace GameCore
         {
             if (AmountOfCheckers > 0)
             {
-                AmountOfCheckers--;
+                --AmountOfCheckers;
                 if (AmountOfCheckers == 0)
                 {
                     GameCheckersOnSpot = GameCheckers.Empty;

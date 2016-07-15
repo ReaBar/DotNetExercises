@@ -6,15 +6,16 @@ namespace GameCore
     class BoardState : IBoardState
     {
         public int BoardSize() => 24;
-        private PointOnBoard[] pointsOnBoard = new PointOnBoard[24];
+        private PointOnBoard[] _pointsOnBoard = new PointOnBoard[24];
         internal List<GameCheckers> GameCheckersOnBar { get; set; }
 
         public BoardState()
         {
             InitializeBoardWithGameCharacters();
+            GameCheckersOnBar = new List<GameCheckers>();
         }
 
-        public PointOnBoard[] BoardPointsState => pointsOnBoard;
+        public PointOnBoard[] BoardPointsState => _pointsOnBoard;
 
         List<GameCheckers> IBoardState.GameCheckersOnBar => GameCheckersOnBar;
 
@@ -24,37 +25,37 @@ namespace GameCore
             {
                 if (i == 0)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(2,GameCheckers.Red);
+                    _pointsOnBoard[i] = new PointOnBoard(2,GameCheckers.Red);
                 }
 
                 else if (i == 5 || i == 12)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(5,GameCheckers.White);
+                    _pointsOnBoard[i] = new PointOnBoard(5,GameCheckers.White);
                 }
 
                 else if (i == 7)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(3,GameCheckers.White);
+                    _pointsOnBoard[i] = new PointOnBoard(3,GameCheckers.White);
                 }
 
                 else if (i == 11 || i == 18)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(5, GameCheckers.Red);
+                    _pointsOnBoard[i] = new PointOnBoard(5, GameCheckers.Red);
                 }
 
                 else if (i == 16)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(3, GameCheckers.Red);
+                    _pointsOnBoard[i] = new PointOnBoard(3, GameCheckers.Red);
                 }
 
                 else if (i == 23)
                 {
-                    pointsOnBoard[i] = new PointOnBoard(2, GameCheckers.White);
+                    _pointsOnBoard[i] = new PointOnBoard(2, GameCheckers.White);
                 }
 
                 else
                 {
-                    pointsOnBoard[i] = new PointOnBoard();
+                    _pointsOnBoard[i] = new PointOnBoard();
                 }
             }
         }
