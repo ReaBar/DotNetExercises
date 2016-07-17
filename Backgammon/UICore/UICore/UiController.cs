@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using GameCore;
 
 namespace UICore
@@ -19,7 +20,7 @@ namespace UICore
         public void NextTurn()
         {
             string input;
-            string[] movesArr = new string[] {};
+            string[] movesArr = new string[] { };
             int intSource = 0, intDestination = 0;
             string strSource = null, strDestination = null;
             bool ingameBoardMoves = false;
@@ -34,34 +35,45 @@ namespace UICore
                 input = Console.ReadLine();
 
             } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll"));
+
             _gameController.TurnStarts();
 
             _dice.PrintDice(_gameController.FirstDice);
             Console.WriteLine();
             _dice.PrintDice(_gameController.SecondDice);
 
-            if (_gameController.FirstDice == _gameController.SecondDice)
+            if (!_gameController.AnyPossibleMoves)
             {
-                Console.WriteLine(" ************ you got double, you get to play the dice four times ************");
-                Console.WriteLine();
-                _dice.PrintDice(_gameController.FirstDice);
-                Console.WriteLine();
-                _dice.PrintDice(_gameController.FirstDice);
+                Console.WriteLine("Sorry you don't have any possible moves to make, changing turns");
             }
-
-            while (_gameController.NumOfTurnsLeft > 0)
+            else
             {
-                do
+                if (_gameController.FirstDice == _gameController.SecondDice)
                 {
-                    Console.WriteLine("From where would you like to move and where to (please write source, destination for example 1, 4)");
-                    var moves = Console.ReadLine();
-                    if (!string.IsNullOrWhiteSpace(moves))
-                    {
-                        movesArr = moves.Split(',');
+                    Console.WriteLine(" ************ you got double, you get to play the dice four times ************");
+                    Console.WriteLine();
+                    _dice.PrintDice(_gameController.FirstDice);
+                    Console.WriteLine();
+                    _dice.PrintDice(_gameController.FirstDice);
+                }
 
-                        ingameBoardMoves = int.TryParse(movesArr[0], out intSource) && int.TryParse(movesArr[1], out intDestination);
-                        if (!ingameBoardMoves && (!string.IsNullOrWhiteSpace(movesArr[0]) || !string.IsNullOrWhiteSpace(movesArr[1])))
+                while (_gameController.NumOfTurnsLeft > 0)
+                {
+                    do
+                    {
+                        if (_gameController.AnyPossibleMoves)
                         {
+                            Console.WriteLine(
+                                "From where would you like to move and where to (please write source, destination for example 1, 4)");
+                            var moves = Console.ReadLine();
+                            if (string.IsNullOrWhiteSpace(moves)) continue;
+                            movesArr = moves.Split(',');
+
+                            ingameBoardMoves = int.TryParse(movesArr[0], out intSource) &&
+                                               int.TryParse(movesArr[1], out intDestination);
+                            if (ingameBoardMoves ||
+                                (string.IsNullOrWhiteSpace(movesArr[0]) && string.IsNullOrWhiteSpace(movesArr[1])))
+                                continue;
                             if (movesArr[0].ToLower().Equals("bar") && int.TryParse(movesArr[1], out intDestination))
                             {
                                 barMove = true;
@@ -75,32 +87,38 @@ namespace UICore
                             }
                         }
 
-                    }
-                } while (movesArr.Length != 2 && (!ingameBoardMoves || !barMove || !bearoffMove) );
+                        else
+                        {
+                            continue;
+                        }
 
-                if (_gameController.AnyPossibleMoves)
-                {
-                    if (ingameBoardMoves == true &&
-                        _gameController.MakeMove(_gameController.CurrentPlayer, intSource, intDestination))
-                    {
-                        _paintBoard.Paint(_gameController.GameBoardState);
-                    }
+                    } while (movesArr.Length != 2 && (!ingameBoardMoves || !barMove || !bearoffMove));
 
-                    else if (barMove == true &&
-                             _gameController.MakeMove(_gameController.CurrentPlayer, strSource, intDestination))
+                    if (_gameController.AnyPossibleMoves)
                     {
-                        _paintBoard.Paint(_gameController.GameBoardState);
-                    }
+                        if (ingameBoardMoves == true &&
+                            _gameController.MakeMove(_gameController.CurrentPlayer, intSource, intDestination))
+                        {
+                            _paintBoard.Paint(_gameController.GameBoardState);
+                        }
 
-                    else if (bearoffMove == true &&
-                             _gameController.MakeMove(_gameController.CurrentPlayer, intSource, strDestination))
-                    {
-                        _paintBoard.Paint(_gameController.GameBoardState);
+                        else if (barMove == true &&
+                                 _gameController.MakeMove(_gameController.CurrentPlayer, strSource, intDestination))
+                        {
+                            _paintBoard.Paint(_gameController.GameBoardState);
+                        }
+
+                        else if (bearoffMove == true &&
+                                 _gameController.MakeMove(_gameController.CurrentPlayer, intSource, strDestination))
+                        {
+                            _paintBoard.Paint(_gameController.GameBoardState);
+                        }
                     }
-                }
-                else
-                {
-                    break;
+                    else
+                    {
+                        Console.WriteLine("Sorry you don't have any possible moves to make, changing turns");
+                        break;
+                    }
                 }
             }
         }

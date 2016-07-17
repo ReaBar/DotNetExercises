@@ -109,9 +109,65 @@
                 return false;
             }
 
-            if (!_gameMove.IsMoveLegal(_gameBoard, player, source, destination))
+            bool isMoveLegal = _gameMove.IsMoveLegal(_gameBoard, player, source, destination);
+
+            if (!isMoveLegal)
             {
                 return false;
+            }
+
+            if (isMoveLegal)
+            {
+                var move = 0;
+                if (player.GameCheckerColor.Equals(GameCheckers.Red))
+                {
+                    switch (player.PlayerState)
+                    {
+                        case PlayerCondition.Regular:
+                            move = (int) destination - (int) source;
+                            break;
+                        case PlayerCondition.Bar:
+                            move = (int) destination;
+                            break;
+                        case PlayerCondition.BearingOff:
+                            move = 25 - (int)source;
+                            break;
+                    }
+                }
+
+                else
+                {
+                    switch (player.PlayerState)
+                    {
+                        case PlayerCondition.Regular:
+                            move = (int)source - (int)destination;
+                            break;
+                        case PlayerCondition.Bar:
+                            move = 25 - (int)destination;
+                            break;
+                        case PlayerCondition.BearingOff:
+                            move = (int)source;
+                            break;
+                    }
+                }
+
+                if (move != 0 && _dice.FirstDice != _dice.SecondDice)
+                {
+                    if ((move == _dice.FirstDice && _dice.FirstDicePlayed) || (move == _dice.SecondDice && _dice.SecondDicePlayed))
+                    {
+                        return false;
+                    }
+
+                    if (move == _dice.FirstDice)
+                    {
+                        _dice.FirstDicePlayed = true;
+                    }
+
+                    else if (move == _dice.SecondDice)
+                    {
+                        _dice.SecondDicePlayed = true;
+                    }
+                }
             }
 
             var s1 = source as string;
@@ -210,6 +266,8 @@
             if (_gameMove.NumOfTurnsLeft == 0 || numOfTurns == 0)
             {
                 _currentPlayer = player == _whitePlayer ? _redPlayer : _whitePlayer;
+                _dice.FirstDicePlayed = false;
+                _dice.SecondDicePlayed = false;
             }
         }
 

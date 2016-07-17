@@ -22,35 +22,6 @@ namespace GameCore
         public List<Tuple<int, int>> GetInboardPossibleMoves => _inboardPossibleMoves;
         public List<Tuple<string, int>> GetBarPossibleMoves => _barPossibleMoves;
 
-        //public bool IsMoveLegal(IBoardState boardState, IPlayer player, int source, int destination)
-        //{
-        //    if (boardState != null && player != null && source < GameBoardState.BoardSize() && source >= 0 &&
-        //        destination >= 0 && destination < GameBoardState.BoardSize())
-        //    {
-        //        if (GameBoardState.GameCheckersOnBar.Contains(player.GameCheckerColor))
-        //        {
-        //            player.PlayerState = PlayerCondition.Bar;
-        //        }
-
-        //        switch (player.PlayerState)
-        //        {
-        //            case PlayerCondition.Regular:
-        //                return IsMoveLegalRegularState(player, source, destination);
-
-        //            case PlayerCondition.Bar:
-        //                return IsMoveLegalBarState(player, source, destination);
-
-        //            case PlayerCondition.BearingOff:
-        //                //return IsMoveLegalBearingOffState(player, source, destination);
-        //                return true;
-
-        //            default:
-        //                return false;
-        //        }
-        //    }
-        //    return false;
-        //}
-
         public bool IsMoveLegal(IBoardState boardState, IPlayer player, object source, object destination)
         {
             GameBoardState = boardState;
@@ -300,13 +271,13 @@ namespace GameCore
 
                 if (player.GameCheckerColor.Equals(GameCheckers.Red))
                 {
-                    if (IsDestinationLegal(player, _dice.FirstDice - 1))
+                    if (!_dice.FirstDicePlayed && IsDestinationLegal(player, _dice.FirstDice - 1))
                     {
                         Tuple<string, int> possibleMoveFromBar = new Tuple<string, int>("bar", _dice.FirstDice);
                         _barPossibleMoves.Add(possibleMoveFromBar);
                     }
 
-                    if (IsDestinationLegal(player, _dice.SecondDice - 1))
+                    if (!_dice.SecondDicePlayed && IsDestinationLegal(player, _dice.SecondDice - 1))
                     {
                         Tuple<string, int> possibleMoveFromBar = new Tuple<string, int>("bar", _dice.SecondDice);
                         _barPossibleMoves.Add(possibleMoveFromBar);
@@ -315,13 +286,13 @@ namespace GameCore
 
                 else if (player.GameCheckerColor.Equals(GameCheckers.White))
                 {
-                    if (IsDestinationLegal(player, 24 - _dice.FirstDice))
+                    if (!_dice.FirstDicePlayed && IsDestinationLegal(player, 24 - _dice.FirstDice))
                     {
                         Tuple<string, int> possibleMoveFromBar = new Tuple<string, int>("bar", 24 - _dice.FirstDice);
                         _barPossibleMoves.Add(possibleMoveFromBar);
                     }
 
-                    if (IsDestinationLegal(player, 24 - _dice.SecondDice))
+                    if (!_dice.SecondDicePlayed && IsDestinationLegal(player, 24 - _dice.SecondDice))
                     {
                         Tuple<string, int> possibleMoveFromBar = new Tuple<string, int>("bar", 24 - _dice.SecondDice);
                         _barPossibleMoves.Add(possibleMoveFromBar);
