@@ -10,6 +10,7 @@ namespace GameCore
         private readonly Dice _dice;
         private readonly List<Tuple<string, int>> _barPossibleMoves;
         private readonly List<Tuple<int, int>> _inboardPossibleMoves;
+        private readonly List<Tuple<int, string>> _bearingoffPossibleMoves;
 
         public Move(IBoardState gameBoardState, Dice dice)
         {
@@ -17,10 +18,12 @@ namespace GameCore
             _dice = dice;
             _barPossibleMoves = new List<Tuple<string, int>>();
             _inboardPossibleMoves = new List<Tuple<int, int>>();
+            _bearingoffPossibleMoves = new List<Tuple<int, string>>();
         }
 
         public List<Tuple<int, int>> GetInboardPossibleMoves => _inboardPossibleMoves;
         public List<Tuple<string, int>> GetBarPossibleMoves => _barPossibleMoves;
+        public List<Tuple<int, string>> GetBearingoffPossibleMoves => _bearingoffPossibleMoves;
 
         public bool IsMoveLegal(IBoardState boardState, IPlayer player, object source, object destination)
         {
@@ -122,7 +125,7 @@ namespace GameCore
 
         private bool IsMoveLegalBearingOffState(IPlayer player, int source)
         {
-            if (source >= 0 && source < 24 && GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor))
+            if (source >= 0 && source < 24 && GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor) && ((source <= _dice.FirstDice && !_dice.FirstDicePlayed) || (source <= _dice.SecondDice && !_dice.SecondDicePlayed)))
             {
                 return true;
             }
@@ -232,38 +235,37 @@ namespace GameCore
 
         private bool IsPlayerInBearingoffState(IPlayer player)
         {
-            if (player != null && !GameBoardState.GameCheckersOnBar.Contains(player.GameCheckerColor))
+            if (player == null || GameBoardState.GameCheckersOnBar.Contains(player.GameCheckerColor)) return false;
+            if (player.GameCheckerColor.Equals(GameCheckers.White))
             {
-                if (player.GameCheckerColor.Equals(GameCheckers.White))
+                for (int i = 23; i > 5; i--)
                 {
-                    for (int i = 23; i > 5; i--)
+                    if (GameBoardState.BoardPointsState[i].GameCheckersOnSpot.Equals(player.GameCheckerColor))
                     {
-                        if (GameBoardState.BoardPointsState[i].GameCheckersOnSpot.Equals(player.GameCheckerColor))
-                        {
-                            return false;
-                        }
+                        return false;
                     }
                 }
-
-                else if (player.GameCheckerColor.Equals(GameCheckers.Red))
-                {
-                    for (int i = 0; i < 18; i++)
-                    {
-                        if (GameBoardState.BoardPointsState[i].GameCheckersOnSpot.Equals(player.GameCheckerColor))
-                        {
-                            return false;
-                        }
-                    }
-                }
-                return true;
             }
-            return false;
+
+            else if (player.GameCheckerColor.Equals(GameCheckers.Red))
+            {
+                for (int i = 0; i < 18; i++)
+                {
+                    if (GameBoardState.BoardPointsState[i].GameCheckersOnSpot.Equals(player.GameCheckerColor))
+                    {
+                        return false;
+                    }
+                }
+            }
+            player.PlayerState = PlayerCondition.BearingOff;
+            return true;
         }
 
         internal void PossibleMoves(IPlayer player, int dice1, int dice2)
         {
             GetBarPossibleMoves.Clear();
             GetInboardPossibleMoves.Clear();
+            GetBearingoffPossibleMoves.Clear();
 
             if (GameBoardState.GameCheckersOnBar.Contains(player.GameCheckerColor))
             {
@@ -300,9 +302,46 @@ namespace GameCore
                 }
             }
 
+            else if (IsPlayerInBearingoffState(player))
+            {
+                if (player.GameCheckerColor.Equals(GameCheckers.Red))
+                {
+                    for (int i = 0 ; i < 6 ; i++)
+                    {
+                        if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i].GameCheckersOnSpot) &&
+                            player.GameCheckerColor.Equals(GameCheckers.Red))
+                        {
+                            if ((i <= _dice.FirstDice || i <= _dice.SecondDice) &&
+                                IsMoveLegal(GameBoardState, player, i, "out"))
+                            {
+                                Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
+                                _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
+                            }
+                        }
+                    }
+                }
+
+                else
+                {
+                    for (int i = 23 ; i > 17 ; i--)
+                    {
+                        if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i].GameCheckersOnSpot) &&
+                            player.GameCheckerColor.Equals(GameCheckers.White))
+                        {
+                            if ((24 - i <= _dice.FirstDice || 24 - i <= _dice.SecondDice) && IsMoveLegal(GameBoardState, player, i, "out"))
+                            {
+                                Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
+                                _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
+                            }
+                        }
+                    }
+                }
+
+            }
+
             else
             {
-                player.PlayerState = IsPlayerInBearingoffState(player) ? PlayerCondition.BearingOff : PlayerCondition.Regular;
+                player.PlayerState = PlayerCondition.Regular;
 
                 for (int i = 1; i < GameBoardState.BoardPointsState.Length + 1; i++)
                 {

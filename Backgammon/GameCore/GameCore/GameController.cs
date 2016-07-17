@@ -68,37 +68,6 @@
             return false;
         }
 
-        //private bool MakeMove(IPlayer player, int source, int destination)
-        //{
-        //    if (player.GameCheckerColor.Equals(GameCheckers.White))
-        //    {
-        //        if (source - destination != FirstDice && source - destination != SecondDice)
-        //        {
-        //            return false;
-        //        }
-        //    }
-
-        //    if (player.GameCheckerColor.Equals(GameCheckers.Red))
-        //    {
-        //        if (destination - source != FirstDice && destination - source != SecondDice)
-        //        {
-        //            return false;
-        //        }
-        //    }
-
-        //    if (_gameMove.IsMoveLegal(_gameBoard, player, source, destination))
-        //    {
-        //        _gameMove.NumOfTurnsLeft--;
-        //        _gameBoard = _gameMove.MakeMove(_gameBoard, player, source, destination);
-        //        if (_gameMove.NumOfTurnsLeft == 0)
-        //        {
-        //            _currentPlayer = player == _whitePlayer ? _redPlayer : _whitePlayer;
-        //        }
-        //        return true;
-        //    }
-        //    return false;
-        //}
-
         public bool MakeMove(IPlayer player, object source, object destination)
         {
 
@@ -190,52 +159,6 @@
                 intSource = (int) source;
             }
 
-            //switch (player.PlayerState)
-            //{
-            //    case PlayerCondition.Regular:
-            //        if (player.GameCheckerColor.Equals(GameCheckers.White))
-            //        {
-            //            if (intSource - intDestination != FirstDice && intSource - intDestination != SecondDice)
-            //            {
-            //                return false;
-            //            }
-            //        }
-
-            //        if (player.GameCheckerColor.Equals(GameCheckers.Red))
-            //        {
-            //            if (intDestination - intSource != FirstDice && intDestination - intSource != SecondDice)
-            //            {
-            //                return false;
-            //            }
-            //        }
-            //        break;
-
-            //    case PlayerCondition.Bar:
-            //        if (player.GameCheckerColor.Equals(GameCheckers.Red))
-            //        {
-            //            if (_dice.FirstDice != intDestination && _dice.SecondDice != intDestination)
-            //            {
-            //                return false;
-            //            }
-            //        }
-
-            //        else if (player.GameCheckerColor.Equals(GameCheckers.White))
-            //        {
-            //            if (_dice.FirstDice != ((24+1) - intDestination) && _dice.SecondDice != ((24 + 1) - intDestination))
-            //            {
-            //                return false;
-            //            }
-            //        }
-            //        break;
-
-            //    case PlayerCondition.BearingOff:
-            //        //TODO do I need to check for something special?
-            //        break;
-
-            //    default:
-            //        return false;
-            //}
-
             if (source is int && destination is int)
             {
                 _gameBoard = _gameMove.MakeMove(_gameBoard,player, intSource - 1, intDestination - 1);
@@ -250,14 +173,10 @@
                 return true;
             }
 
-            if (source is string && destination is int)
-            {
-                _gameBoard = _gameMove.MakeMove(_gameBoard,player,strSource,intDestination-1);
-                WhosTurn(player, _gameMove.NumOfTurnsLeft);
-                return true;
-            }
-
-            return false;
+            if (!(source is string) || !(destination is int)) return false;
+            _gameBoard = _gameMove.MakeMove(_gameBoard,player,strSource,intDestination-1);
+            WhosTurn(player, _gameMove.NumOfTurnsLeft);
+            return true;
         }
 
         private void WhosTurn(IPlayer player, int numOfTurns)
@@ -270,42 +189,5 @@
                 _dice.SecondDicePlayed = false;
             }
         }
-
-        //private bool MakeMoveFromBar(IPlayer player, string source, int destination)
-        //{
-        //    if (_gameBoard.GameCheckersOnBar.Contains(player.GameCheckerColor))
-        //    {
-        //        if (player.GameCheckerColor.Equals(GameCheckers.Red))
-        //        {
-        //            if (_dice.FirstDice != destination && _dice.SecondDice != destination)
-        //            {
-        //                return false;
-        //            }
-        //        }
-
-        //        else if (player.GameCheckerColor.Equals(GameCheckers.White))
-        //        {
-        //            if (_dice.FirstDice != (24 - destination) && _dice.SecondDice != (24 - destination))
-        //            {
-        //                return false;
-        //            }
-        //        }
-
-        //        _gameMove.NumOfTurnsLeft--;
-        //        _gameBoard = _gameMove.MakeMove(_gameBoard, player, source, destination);
-        //        if (_gameMove.NumOfTurnsLeft == 0)
-        //        {
-        //            _currentPlayer = player == _whitePlayer ? _redPlayer : _whitePlayer;
-        //        }
-        //        return true;
-        //    }
-
-        //    return false;
-        //}
-
-        //public bool MakeMove(IPlayer player, int source, string destination)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }
