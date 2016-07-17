@@ -7,8 +7,11 @@
         int RollSecondDice { get; }
         int FirstDice { get; }
         int SecondDice { get; }
-        bool MakeMove(IPlayer player, int source, int destination);
+        bool MakeMove(IPlayer player, object source, object destination);
         IPlayer CurrentPlayer { get;}
         void SetFirstPlayer(GameCheckers gameCheckerColor);
+        int NumOfTurnsLeft { get; }
+        void TurnStarts();
+        bool AnyPossibleMoves { get; }
     }
 }

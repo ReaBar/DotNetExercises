@@ -1,23 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace GameCore
 {
     class BoardState : IBoardState
     {
         public int BoardSize() => 24;
-        private PointOnBoard[] _pointsOnBoard = new PointOnBoard[24];
+        private readonly PointOnBoard[] _pointsOnBoard = new PointOnBoard[24];
         internal List<GameCheckers> GameCheckersOnBar { get; set; }
+        internal  List<GameCheckers> GameCheckersOut { get; set; }
 
         public BoardState()
         {
             InitializeBoardWithGameCharacters();
             GameCheckersOnBar = new List<GameCheckers>();
+            GameCheckersOut = new List<GameCheckers>();
         }
 
         public PointOnBoard[] BoardPointsState => _pointsOnBoard;
 
         List<GameCheckers> IBoardState.GameCheckersOnBar => GameCheckersOnBar;
+
+        List<GameCheckers> IBoardState.GameCheckersOut => GameCheckersOut;
 
         private void InitializeBoardWithGameCharacters()
         {

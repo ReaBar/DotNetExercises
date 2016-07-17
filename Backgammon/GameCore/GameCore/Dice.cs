@@ -6,9 +6,16 @@ namespace GameCore
     {
         private readonly Random _rnd = new Random();
         private int _firstDice, _secondDice;
-        public int FirstDice => _firstDice;
-        public int SecondDice => _secondDice;
-        public int RollFirstDice => _firstDice = _rnd.Next(1, 7);
-        public int RollSecondDice => _secondDice = _rnd.Next(1, 7);
+        internal int FirstDice => _firstDice;
+        internal int SecondDice => _secondDice;
+        internal int RollFirstDice => _firstDice = _rnd.Next(1, 7);
+        internal int RollSecondDice => _secondDice = _rnd.Next(1, 7);
+        //internal bool IsDouble => _firstDice == _secondDice;
+
+        //internal void RollDices()
+        //{
+        //    _firstDice = _rnd.Next(1, 7);
+        //    _secondDice = _rnd.Next(1, 7);
+        //}
     }
 }

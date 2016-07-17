@@ -18,11 +18,14 @@ namespace UICore
 
         public void NextTurn()
         {
-            string input,moves;
+            string input;
             string[] movesArr = new string[] {};
-            int source = 0, destination = 0;
-            int numOfTurns = 2;
-            bool success = false;
+            int intSource = 0, intDestination = 0;
+            string strSource = null, strDestination = null;
+            bool ingameBoardMoves = false;
+            bool bearoffMove = false;
+            bool barMove = false;
+
             do
             {
                 Console.WriteLine(_gameController.CurrentPlayer.GameCheckerColor.Equals(GameCheckers.White)
@@ -31,10 +34,11 @@ namespace UICore
                 input = Console.ReadLine();
 
             } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll"));
+            _gameController.TurnStarts();
 
-            _dice.PrintDice(_gameController.RollFirstDice);
+            _dice.PrintDice(_gameController.FirstDice);
             Console.WriteLine();
-            _dice.PrintDice(_gameController.RollSecondDice);
+            _dice.PrintDice(_gameController.SecondDice);
 
             if (_gameController.FirstDice == _gameController.SecondDice)
             {
@@ -43,30 +47,62 @@ namespace UICore
                 _dice.PrintDice(_gameController.FirstDice);
                 Console.WriteLine();
                 _dice.PrintDice(_gameController.FirstDice);
-                numOfTurns = 4;
             }
 
-            while (numOfTurns > 0)
+            while (_gameController.NumOfTurnsLeft > 0)
             {
                 do
                 {
                     Console.WriteLine("From where would you like to move and where to (please write source, destination for example 1, 4)");
-                    moves = Console.ReadLine();
+                    var moves = Console.ReadLine();
                     if (!string.IsNullOrWhiteSpace(moves))
                     {
                         movesArr = moves.Split(',');
 
-                        success = int.TryParse(movesArr[0], out source) && int.TryParse(movesArr[1], out destination);
+                        ingameBoardMoves = int.TryParse(movesArr[0], out intSource) && int.TryParse(movesArr[1], out intDestination);
+                        if (!ingameBoardMoves && (!string.IsNullOrWhiteSpace(movesArr[0]) || !string.IsNullOrWhiteSpace(movesArr[1])))
+                        {
+                            if (movesArr[0].ToLower().Equals("bar") && int.TryParse(movesArr[1], out intDestination))
+                            {
+                                barMove = true;
+                                strSource = movesArr[0];
+                            }
+
+                            else if (int.TryParse(movesArr[0], out intSource) && movesArr[1].ToLower().Equals("out"))
+                            {
+                                bearoffMove = true;
+                                strDestination = movesArr[1];
+                            }
+                        }
 
                     }
-                } while (movesArr.Length != 2 && !success);
+                } while (movesArr.Length != 2 && (!ingameBoardMoves || !barMove || !bearoffMove) );
 
-                if (_gameController.MakeMove(_gameController.CurrentPlayer, source, destination))
+                if (_gameController.AnyPossibleMoves)
                 {
-                    numOfTurns--;
-                    _paintBoard.Paint(_gameController.GameBoardState);
+                    if (ingameBoardMoves == true &&
+                        _gameController.MakeMove(_gameController.CurrentPlayer, intSource, intDestination))
+                    {
+                        _paintBoard.Paint(_gameController.GameBoardState);
+                    }
+
+                    else if (barMove == true &&
+                             _gameController.MakeMove(_gameController.CurrentPlayer, strSource, intDestination))
+                    {
+                        _paintBoard.Paint(_gameController.GameBoardState);
+                    }
+
+                    else if (bearoffMove == true &&
+                             _gameController.MakeMove(_gameController.CurrentPlayer, intSource, strDestination))
+                    {
+                        _paintBoard.Paint(_gameController.GameBoardState);
+                    }
                 }
-            }    
+                else
+                {
+                    break;
+                }
+            }
         }
 
         private void WhosGonnaStart()

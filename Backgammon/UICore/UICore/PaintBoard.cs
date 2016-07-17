@@ -31,7 +31,7 @@ namespace UICore
                         _boardMatrix[i, j] = "_";
                     }
 
-                    else if (i == 2 && j != 0 && j < _boardWidth - 1 && (j < _boardWidth/2 - 3 || j > _boardWidth/2 + 3))
+                    else if (i == 2 && j != 0 && j < _boardWidth - 1 && (j < _boardWidth / 2 - 3 || j > _boardWidth / 2 + 3))
                     {
                         _boardMatrix[i, j] = topNumbers.ToString() + " ";
                         j += 2;
@@ -39,7 +39,7 @@ namespace UICore
                     }
 
                     else if (i == _boardHeight - 2 && j != 0 && j < _boardWidth - 1 &&
-                             (j < _boardWidth/2 - 3 || j > _boardWidth/2 + 3))
+                             (j < _boardWidth / 2 - 3 || j > _boardWidth / 2 + 3))
                     {
                         if (bottomNumbers < 10)
                         {
@@ -64,12 +64,12 @@ namespace UICore
                         _boardMatrix[i, j] = "|";
                     }
 
-                    else if (j == _boardWidth/2 - 2 || j == _boardWidth/2 + 2)
+                    else if (j == _boardWidth / 2 - 2 || j == _boardWidth / 2 + 2)
                     {
                         _boardMatrix[i, j] = "|";
                     }
 
-                    else if (j == _boardWidth/2 - 1 && i == _boardHeight/2)
+                    else if (j == _boardWidth / 2 - 1 && i == _boardHeight / 2)
                     {
                         _boardMatrix[i, j++] = "B";
                         _boardMatrix[i, j++] = "A";
@@ -91,7 +91,7 @@ namespace UICore
             BuildBoard();
             for (int i = 0; i < boardState.BoardPointsState.Length; i++)
             {
-                if (i < boardState.BoardPointsState.Length/2)
+                if (i < boardState.BoardPointsState.Length / 2)
                 {
                     int bottomRow = _boardHeight - 3;
 
@@ -102,16 +102,33 @@ namespace UICore
                             _boardMatrix[bottomRow, bottomColumn] = "w";
                         }
 
-                        else
+                        else if (boardState.BoardPointsState[i].GameCheckersOnSpot.Equals(GameCheckers.Red))
                         {
                             _boardMatrix[bottomRow, bottomColumn] = "r";
                         }
+
                         bottomRow--;
                     }
-                    if (bottomColumn == 26)
+                    if (bottomColumn == 26 && (boardState.GameCheckersOnBar.Count == 0 || !boardState.GameCheckersOnBar.Contains(GameCheckers.Red)))
                     {
                         bottomColumn -= 10;
                     }
+
+                    else if (bottomColumn == 26 && boardState.GameCheckersOnBar.Contains(GameCheckers.Red))
+                    {
+                        bottomColumn -= 4;
+                        bottomRow = _boardHeight - 3;
+                        foreach (var gameChecker in boardState.GameCheckersOnBar)
+                        {
+                            if (gameChecker.Equals(GameCheckers.Red))
+                            {
+                                _boardMatrix[bottomRow, bottomColumn] = "r";
+                                bottomRow--;
+                            }
+                        }
+                        bottomColumn -= 6;
+                    }
+
                     else
                     {
                         bottomColumn -= 3;
@@ -135,10 +152,26 @@ namespace UICore
                         }
                         topRow++;
                     }
-                    if (topColumn == 16)
+                    if (topColumn == 16 && (boardState.GameCheckersOnBar.Count == 0 || !boardState.GameCheckersOnBar.Contains(GameCheckers.White)))
                     {
                         topColumn += 10;
                     }
+
+                    else if (topColumn == 16 && boardState.GameCheckersOnBar.Contains(GameCheckers.White))
+                    {
+                        topColumn += 6;
+                        topRow =  3;
+                        foreach (var gameChecker in boardState.GameCheckersOnBar)
+                        {
+                            if (gameChecker.Equals(GameCheckers.White))
+                            {
+                                _boardMatrix[topRow, topColumn] = "w";
+                                topRow++;
+                            }
+                        }
+                        topColumn += 4;
+                    }
+
                     else
                     {
                         topColumn += 3;
