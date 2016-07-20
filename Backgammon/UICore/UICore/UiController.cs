@@ -8,6 +8,7 @@ namespace UICore
         private readonly IGameController _gameController;
         private readonly UiDice _dice;
         private readonly IPaintBoard _paintBoard;
+        private bool _stopGame = false;
 
         public UiController(IGameController gameController)
         {
@@ -33,13 +34,23 @@ namespace UICore
                     : "Player 2 (red) please !roll the dices");
                 input = Console.ReadLine();
 
-            } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll"));
+            } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll") && !input.Equals("!quit"));
 
-            _gameController.TurnStarts();
+            if (input.Equals("!quit"))
+            {
+                _stopGame = true;
+                return;
+            }
 
-            _dice.PrintDice(_gameController.FirstDice);
-            Console.WriteLine();
-            _dice.PrintDice(_gameController.SecondDice);
+            else
+            {
+                _gameController.TurnStarts();
+
+                _dice.PrintDice(_gameController.FirstDice);
+                Console.WriteLine();
+                _dice.PrintDice(_gameController.SecondDice);
+            }
+
 
             if (!_gameController.AnyPossibleMoves)
             {
@@ -60,12 +71,17 @@ namespace UICore
                 {
                     do
                     {
-                        if (_gameController.AnyPossibleMoves)
+                        if (_gameController.AnyPossibleMoves && !_gameController.IsGameOver())
                         {
                             Console.WriteLine(
-                                "From where would you like to move and where to (please write source, destination for example 1, 4)");
+                                "From where would you like to move and where to (please write source, destination for example 1, 4 or bar, 5 or 19, out)");
                             var moves = Console.ReadLine();
                             if (string.IsNullOrWhiteSpace(moves)) continue;
+                            if (moves.Equals("!quit"))
+                            {
+                                _stopGame = true;
+                                return;
+                            }
                             movesArr = moves.Split(',');
 
                             ingameBoardMoves = int.TryParse(movesArr[0], out intSource) &&
@@ -79,7 +95,7 @@ namespace UICore
                                 strSource = movesArr[0];
                             }
 
-                            else if (int.TryParse(movesArr[0], out intSource) && movesArr[1].ToLower().Equals("out"))
+                            else if (int.TryParse(movesArr[0], out intSource) && movesArr[1].ToLower().Trim().Equals("out"))
                             {
                                 bearoffMove = true;
                                 strDestination = movesArr[1];
@@ -93,31 +109,31 @@ namespace UICore
 
                     } while (movesArr.Length != 2 && (!ingameBoardMoves || !barMove || !bearoffMove));
 
-                    if (_gameController.AnyPossibleMoves)
+                    //if (_gameController.AnyPossibleMoves)
+                    //{
+                    if (ingameBoardMoves == true &&
+                        _gameController.MakeMove(_gameController.CurrentPlayer, intSource, intDestination))
                     {
-                        if (ingameBoardMoves == true &&
-                            _gameController.MakeMove(_gameController.CurrentPlayer, intSource, intDestination))
-                        {
-                            _paintBoard.Paint(_gameController.GameBoardState);
-                        }
-
-                        else if (barMove == true &&
-                                 _gameController.MakeMove(_gameController.CurrentPlayer, strSource, intDestination))
-                        {
-                            _paintBoard.Paint(_gameController.GameBoardState);
-                        }
-
-                        else if (bearoffMove == true &&
-                                 _gameController.MakeMove(_gameController.CurrentPlayer, intSource, strDestination))
-                        {
-                            _paintBoard.Paint(_gameController.GameBoardState);
-                        }
+                        _paintBoard.Paint(_gameController.GameBoardState);
                     }
-                    else
+
+                    else if (barMove == true &&
+                             _gameController.MakeMove(_gameController.CurrentPlayer, strSource, intDestination))
                     {
-                        Console.WriteLine("Sorry you don't have any possible moves to make, changing turns");
-                        break;
+                        _paintBoard.Paint(_gameController.GameBoardState);
                     }
+
+                    else if (bearoffMove == true &&
+                             _gameController.MakeMove(_gameController.CurrentPlayer, intSource, strDestination))
+                    {
+                        _paintBoard.Paint(_gameController.GameBoardState);
+                    }
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine("Sorry you don't have any possible moves to make, changing turns");
+                    //    break;
+                    //}
                 }
             }
         }
@@ -133,7 +149,14 @@ namespace UICore
                     Console.WriteLine("White player please roll the first dice using !roll");
                     input = Console.ReadLine();
 
-                } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll"));
+                } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll") && !input.Equals("!quit"));
+
+                if (input.Equals("!quit"))
+                {
+                    _stopGame = true;
+                    return;
+                }
+
                 int firstDice = _gameController.RollFirstDice;
                 _dice.PrintDice(firstDice);
 
@@ -141,7 +164,13 @@ namespace UICore
                 {
                     Console.WriteLine("Red player please roll the first dice using !roll");
                     input = Console.ReadLine();
-                } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll"));
+                } while (string.IsNullOrWhiteSpace(input) || !input.Equals("!roll") && !input.Equals("!quit"));
+
+                if (input.Equals("!quit"))
+                {
+                    _stopGame = true;
+                    return;
+                }
 
                 int secondDice = _gameController.RollSecondDice;
                 _dice.PrintDice(secondDice);
@@ -170,11 +199,17 @@ namespace UICore
         public void StartGame()
         {
             Console.WriteLine("Starting new game - Good Luck");
+            Console.WriteLine("you can use !quit to quit the game at anytime");
             _paintBoard.Paint(_gameController.GameBoardState);
             WhosGonnaStart();
-            while (true)
+            while (!_stopGame)
             {
                 NextTurn();
+                if (_gameController.IsGameOver())
+                {
+                    Console.WriteLine("Game Over - Good Game");
+                    break;
+                }
             }
         }
     }

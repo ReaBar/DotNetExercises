@@ -8,6 +8,7 @@ namespace GameCore
         PointOnBoard[] BoardPointsState { get;}
         int BoardSize();
         List<GameCheckers> GameCheckersOnBar { get; }
-        List<GameCheckers> GameCheckersOut { get; }
+        List<GameCheckers> RedGameCheckersOut { get; }
+        List<GameCheckers> WhiteGameCheckersOut { get;}
     }
 }

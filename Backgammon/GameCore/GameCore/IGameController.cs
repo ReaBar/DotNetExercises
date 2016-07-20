@@ -13,5 +13,6 @@
         int NumOfTurnsLeft { get; }
         void TurnStarts();
         bool AnyPossibleMoves { get; }
+        bool IsGameOver();
     }
 }

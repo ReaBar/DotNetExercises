@@ -54,16 +54,21 @@
         }
 
         public bool AnyPossibleMoves => PossibleMoves();
+        public bool IsGameOver()
+        {
+            return GameBoardState.RedGameCheckersOut.Count == 15 || GameBoardState.WhiteGameCheckersOut.Count == 15;
+        }
 
         public int NumOfTurnsLeft => _gameMove.NumOfTurnsLeft;
 
         private bool PossibleMoves()
         {
-            _gameMove.PossibleMoves(_currentPlayer,_dice.FirstDice,_dice.SecondDice);
-            if (_gameMove.GetBarPossibleMoves.Count != 0 || _gameMove.GetInboardPossibleMoves.Count != 0)
+            _gameMove.PossibleMoves(_currentPlayer);
+            if (_gameMove.GetBarPossibleMoves.Count != 0 || _gameMove.GetInboardPossibleMoves.Count != 0 || _gameMove.GetBearingoffPossibleMoves.Count != 0)
             {
                 return true;
             }
+
             WhosTurn(_currentPlayer,0);
             return false;
         }
@@ -99,7 +104,14 @@
                             move = (int) destination;
                             break;
                         case PlayerCondition.BearingOff:
-                            move = 25 - (int)source;
+                            if (destination is string)
+                            {
+                                move = 25 - (int)source;
+                            }
+                            else if (destination is int)
+                            {
+                                move = (int)destination - (int)source;
+                            }
                             break;
                     }
                 }
@@ -115,26 +127,59 @@
                             move = 25 - (int)destination;
                             break;
                         case PlayerCondition.BearingOff:
-                            move = (int)source;
+                            if (destination is string)
+                            {
+                                move = (int)source;
+                            }
+                            else if (destination is int)
+                            {
+                                move = (int)source - (int)destination;
+                            }
                             break;
                     }
                 }
 
                 if (move != 0 && _dice.FirstDice != _dice.SecondDice)
                 {
-                    if ((move == _dice.FirstDice && _dice.FirstDicePlayed) || (move == _dice.SecondDice && _dice.SecondDicePlayed))
-                    {
-                        return false;
-                    }
-
-                    if (move == _dice.FirstDice)
+                    if (move == _dice.FirstDice && !_dice.FirstDicePlayed)
                     {
                         _dice.FirstDicePlayed = true;
                     }
 
-                    else if (move == _dice.SecondDice)
+                    else if (move == _dice.SecondDice && !_dice.SecondDicePlayed)
                     {
                         _dice.SecondDicePlayed = true;
+                    }
+
+                    else if (_dice.FirstDice < _dice.SecondDice && player.PlayerState.Equals(PlayerCondition.BearingOff))
+                    {
+                        if (move < _dice.FirstDice)
+                        {
+                            _dice.FirstDicePlayed = true;
+                        }
+
+                        else if (move < _dice.SecondDice)
+                        {
+                            _dice.SecondDicePlayed = true;
+                        }
+                    }
+
+                    else if (_dice.SecondDice < _dice.FirstDice && player.PlayerState.Equals(PlayerCondition.BearingOff))
+                    {
+                        if (move < _dice.SecondDice)
+                        {
+                            _dice.FirstDicePlayed = true;
+                        }
+
+                        else if (move < _dice.FirstDice)
+                        {
+                            _dice.SecondDicePlayed = true;
+                        }
+                    }
+
+                    else if ((move == _dice.FirstDice && _dice.FirstDicePlayed) || (move == _dice.SecondDice && _dice.SecondDicePlayed))
+                    {
+                        return false;
                     }
                 }
             }

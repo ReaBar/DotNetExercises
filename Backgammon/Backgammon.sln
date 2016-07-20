@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackgammonDriver", "BackgammonDriver\BackgammonDriver.csproj", "{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameCore", "GameCore\GameCore\GameCore.csproj", "{56218919-3F07-4EBC-9557-1FF497515BCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UICore", "UICore\UICore\UICore.csproj", "{42C588CC-D43B-43B0-B2F3-DD5513432DB6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB1BE1A9-604A-47DC-B12E-1DB5CD974E68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56218919-3F07-4EBC-9557-1FF497515BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56218919-3F07-4EBC-9557-1FF497515BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56218919-3F07-4EBC-9557-1FF497515BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56218919-3F07-4EBC-9557-1FF497515BCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42C588CC-D43B-43B0-B2F3-DD5513432DB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42C588CC-D43B-43B0-B2F3-DD5513432DB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42C588CC-D43B-43B0-B2F3-DD5513432DB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42C588CC-D43B-43B0-B2F3-DD5513432DB6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

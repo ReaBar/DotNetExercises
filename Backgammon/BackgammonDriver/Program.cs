@@ -1,6 +1,4 @@
-﻿
-using System;
-using GameCore;
+﻿using GameCore;
 using UICore;
 
 namespace BackgammonDriver
@@ -12,8 +10,10 @@ namespace BackgammonDriver
             Human, 
             AI
         }
+
         static void Main(string[] args)
         {
+            //TODO ask if h vs h, ai vs h, ai vs ai
             //Console.WriteLine("Is player one human? yes/no");
             //var answer = Console.ReadLine();
             IPlayer whitePlayer = new HumanPlayer(GameCheckers.White);

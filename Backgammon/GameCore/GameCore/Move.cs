@@ -40,6 +40,12 @@ namespace GameCore
                 {
                     return IsMoveLegalBearingOffState(player, (int)source - 1);
                 }
+
+                else if (source is int && destination is int)
+                {
+                    return IsMoveLegalRegularState(player, (int)source - 1, (int)destination - 1);
+                }
+
                 return false;
             }
 
@@ -82,12 +88,7 @@ namespace GameCore
                 }
             }
 
-            if (source >= 0 && source < 24 && destination >= 0 && destination < 24 && GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor) && IsDestinationLegal(player, destination))
-            {
-                return true;
-            }
-
-            return false;
+            return source >= 0 && source < 24 && destination >= 0 && destination < 24 && GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor) && IsDestinationLegal(player, destination);
         }
 
         private bool IsMoveLegalBarState(IPlayer player, int destination)
@@ -125,9 +126,15 @@ namespace GameCore
 
         private bool IsMoveLegalBearingOffState(IPlayer player, int source)
         {
-            if (source >= 0 && source < 24 && GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor) && ((source <= _dice.FirstDice && !_dice.FirstDicePlayed) || (source <= _dice.SecondDice && !_dice.SecondDicePlayed)))
+
+            if (source >= 0 && source < 24 && GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor))
             {
-                return true;
+                source = player.GameCheckerColor.Equals(GameCheckers.Red) ? 24 - source: source;
+                if ((source <= _dice.FirstDice && !_dice.FirstDicePlayed) ||
+                     (source <= _dice.SecondDice && !_dice.SecondDicePlayed))
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -165,7 +172,20 @@ namespace GameCore
                     return MakeMoveBarState(GameBoardState, player, (string)source, (int)destination);
 
                 case PlayerCondition.BearingOff:
-                    return MakeMoveBearingoffState(GameBoardState, player, (int)source, (string)destination);
+                    var s = destination as string;
+                    if (s != null)
+                    {
+                        return MakeMoveBearingoffState(GameBoardState, player, (int)source, s);
+                    }
+                    else if (destination is int)
+                    {
+                        return MakeMoveRegularState(GameBoardState, player, (int)source, (int)destination);
+                    }
+
+                    else
+                    {
+                        return GameBoardState;
+                    }
 
                 default:
                     return GameBoardState;
@@ -225,8 +245,18 @@ namespace GameCore
         {
             if (GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor))
             {
+                if (GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(GameCheckers.Red))
+                {
+                    GameBoardState.RedGameCheckersOut.Add(player.GameCheckerColor);
+                }
+
+                else
+                {
+                    GameBoardState.WhiteGameCheckersOut.Add(player.GameCheckerColor);
+                }
+
                 GameBoardState.BoardPointsState[source].RemoveCheckerFromSpot();
-                GameBoardState.GameCheckersOut.Add(player.GameCheckerColor);
+
             }
 
             return GameBoardState;
@@ -261,7 +291,7 @@ namespace GameCore
             return true;
         }
 
-        internal void PossibleMoves(IPlayer player, int dice1, int dice2)
+        internal void PossibleMoves(IPlayer player)
         {
             GetBarPossibleMoves.Clear();
             GetInboardPossibleMoves.Clear();
@@ -302,76 +332,74 @@ namespace GameCore
                 }
             }
 
-            else if (IsPlayerInBearingoffState(player))
-            {
-                if (player.GameCheckerColor.Equals(GameCheckers.Red))
-                {
-                    for (int i = 0 ; i < 6 ; i++)
-                    {
-                        if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i].GameCheckersOnSpot) &&
-                            player.GameCheckerColor.Equals(GameCheckers.Red))
-                        {
-                            if ((i <= _dice.FirstDice || i <= _dice.SecondDice) &&
-                                IsMoveLegal(GameBoardState, player, i, "out"))
-                            {
-                                Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
-                                _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
-                            }
-                        }
-                    }
-                }
-
-                else
-                {
-                    for (int i = 23 ; i > 17 ; i--)
-                    {
-                        if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i].GameCheckersOnSpot) &&
-                            player.GameCheckerColor.Equals(GameCheckers.White))
-                        {
-                            if ((24 - i <= _dice.FirstDice || 24 - i <= _dice.SecondDice) && IsMoveLegal(GameBoardState, player, i, "out"))
-                            {
-                                Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
-                                _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
-                            }
-                        }
-                    }
-                }
-
-            }
-
             else
             {
-                player.PlayerState = PlayerCondition.Regular;
+                player.PlayerState = (IsPlayerInBearingoffState(player)) ? PlayerCondition.BearingOff : PlayerCondition.Regular;
 
                 for (int i = 1; i < GameBoardState.BoardPointsState.Length + 1; i++)
                 {
                     if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i - 1].GameCheckersOnSpot) && player.GameCheckerColor.Equals(GameCheckers.Red))
                     {
-                        if (IsMoveLegal(GameBoardState, player, i, i + dice1))
+                        if (IsMoveLegal(GameBoardState, player, i, i + _dice.FirstDice))
                         {
-                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i + dice1 - 1);
+                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i + _dice.FirstDice - 1);
                             _inboardPossibleMoves.Add(possibleMove);
                         }
 
-                        if (IsMoveLegal(GameBoardState, player, i, i + dice2))
+                        if (IsMoveLegal(GameBoardState, player, i, i + _dice.SecondDice))
                         {
-                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i + dice2 - 1);
+                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i + _dice.SecondDice - 1);
                             _inboardPossibleMoves.Add(possibleMove);
                         }
                     }
 
                     else if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i - 1].GameCheckersOnSpot) && player.GameCheckerColor.Equals(GameCheckers.White))
                     {
-                        if (IsMoveLegal(GameBoardState, player, i, i - dice1))
+                        if (IsMoveLegal(GameBoardState, player, i, i - _dice.FirstDice))
                         {
-                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i - dice1 - 1);
+                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i - _dice.FirstDice - 1);
                             _inboardPossibleMoves.Add(possibleMove);
                         }
 
-                        if (IsMoveLegal(GameBoardState, player, i, i - dice2))
+                        if (IsMoveLegal(GameBoardState, player, i, i - _dice.SecondDice))
                         {
-                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i - dice2 - 1);
+                            Tuple<int, int> possibleMove = new Tuple<int, int>(i - 1, i - _dice.SecondDice - 1);
                             _inboardPossibleMoves.Add(possibleMove);
+                        }
+                    }
+                }
+
+                if (player.PlayerState.Equals(PlayerCondition.BearingOff))
+                {
+                    if (player.GameCheckerColor.Equals(GameCheckers.Red))
+                    {
+                        for (int i = 23; i > 17; i--)
+                        {
+                            if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i].GameCheckersOnSpot) &&
+                                player.GameCheckerColor.Equals(GameCheckers.Red))
+                            {
+                                if (IsMoveLegalBearingOffState(player, i))
+                                {
+                                    Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
+                                    _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
+                                }
+                            }
+                        }
+                    }
+
+                    else if (player.GameCheckerColor.Equals(GameCheckers.White))
+                    {
+                        for (int i = 0; i < 6; i++)
+                        {
+                            if (player.GameCheckerColor.Equals(GameBoardState.BoardPointsState[i].GameCheckersOnSpot) &&
+                                player.GameCheckerColor.Equals(GameCheckers.White))
+                            {
+                                if (IsMoveLegalBearingOffState(player, i))
+                                {
+                                    Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
+                                    _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
+                                }
+                            }
                         }
                     }
                 }
