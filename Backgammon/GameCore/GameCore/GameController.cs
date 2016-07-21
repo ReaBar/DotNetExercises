@@ -1,4 +1,7 @@
-﻿namespace GameCore
+﻿using System;
+using System.Collections.Generic;
+
+namespace GameCore
 {
     public enum PlayerCondition
     {
@@ -37,8 +40,10 @@
         public int RollFirstDice => _dice.RollFirstDice;
         public int RollSecondDice => _dice.RollSecondDice;
 
+        public HashSet<Tuple<int, int>> GetInboardPossibleMoves => _gameMove.GetInboardPossibleMoves;
+        public HashSet<Tuple<string, int>> GetBarPossibleMoves => _gameMove.GetBarPossibleMoves;
+        public HashSet<Tuple<int, string>> GetBearingoffPossibleMoves => _gameMove.GetBearingoffPossibleMoves;
         public IBoardState GameBoardState => _gameBoard;
-
         public IPlayer CurrentPlayer => _currentPlayer;
 
         public void SetFirstPlayer(GameCheckers player)
@@ -58,6 +63,8 @@
         {
             return GameBoardState.RedGameCheckersOut.Count == 15 || GameBoardState.WhiteGameCheckersOut.Count == 15;
         }
+
+
 
         public int NumOfTurnsLeft => _gameMove.NumOfTurnsLeft;
 

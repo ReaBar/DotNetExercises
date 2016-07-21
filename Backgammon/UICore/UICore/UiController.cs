@@ -9,6 +9,7 @@ namespace UICore
         private readonly UiDice _dice;
         private readonly IPaintBoard _paintBoard;
         private bool _stopGame = false;
+        private string _noPossibleMoves = "Sorry you don't have any possible moves to make, changing turns";
 
         public UiController(IGameController gameController)
         {
@@ -42,19 +43,15 @@ namespace UICore
                 return;
             }
 
-            else
-            {
-                _gameController.TurnStarts();
+            _gameController.TurnStarts();
 
-                _dice.PrintDice(_gameController.FirstDice);
-                Console.WriteLine();
-                _dice.PrintDice(_gameController.SecondDice);
-            }
-
+            _dice.PrintDice(_gameController.FirstDice);
+            Console.WriteLine();
+            _dice.PrintDice(_gameController.SecondDice);
 
             if (!_gameController.AnyPossibleMoves)
             {
-                Console.WriteLine("Sorry you don't have any possible moves to make, changing turns");
+                Console.WriteLine(_noPossibleMoves);
             }
             else
             {
@@ -82,6 +79,36 @@ namespace UICore
                                 _stopGame = true;
                                 return;
                             }
+
+                            if (moves.Equals("!moves"))
+                            {
+                                {
+                                    foreach (var bearingoffPossibleMove in _gameController.GetBearingoffPossibleMoves)
+                                    {
+                                        Console.WriteLine(
+                                            $"from {bearingoffPossibleMove.Item1 + 1} to {bearingoffPossibleMove.Item2}");
+                                    }
+
+                                    foreach (var barPossibleMove in _gameController.GetBarPossibleMoves)
+                                    {
+                                        if (_gameController.CurrentPlayer.GameCheckerColor.Equals(GameCheckers.Red))
+                                        {
+                                            Console.WriteLine($"from {barPossibleMove.Item1} to {barPossibleMove.Item2}");
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine(
+                                                $"from {barPossibleMove.Item1} to {barPossibleMove.Item2 + 1}");
+                                        }
+                                    }
+
+                                    foreach (var inboardPossibleMove in _gameController.GetInboardPossibleMoves)
+                                    {
+                                        Console.WriteLine(
+                                            $"from {inboardPossibleMove.Item1 + 1} to {inboardPossibleMove.Item2 + 1}");
+                                    }
+                                }
+                            }
                             movesArr = moves.Split(',');
 
                             ingameBoardMoves = int.TryParse(movesArr[0], out intSource) &&
@@ -95,7 +122,8 @@ namespace UICore
                                 strSource = movesArr[0];
                             }
 
-                            else if (int.TryParse(movesArr[0], out intSource) && movesArr[1].ToLower().Trim().Equals("out"))
+                            else if (int.TryParse(movesArr[0], out intSource) &&
+                                     movesArr[1].ToLower().Trim().Equals("out"))
                             {
                                 bearoffMove = true;
                                 strDestination = movesArr[1];
@@ -104,36 +132,28 @@ namespace UICore
 
                         else
                         {
-                            continue;
+                            Console.WriteLine(_noPossibleMoves);
                         }
 
                     } while (movesArr.Length != 2 && (!ingameBoardMoves || !barMove || !bearoffMove));
 
-                    //if (_gameController.AnyPossibleMoves)
-                    //{
-                    if (ingameBoardMoves == true &&
+                    if (ingameBoardMoves &&
                         _gameController.MakeMove(_gameController.CurrentPlayer, intSource, intDestination))
                     {
                         _paintBoard.Paint(_gameController.GameBoardState);
                     }
 
-                    else if (barMove == true &&
+                    else if (barMove &&
                              _gameController.MakeMove(_gameController.CurrentPlayer, strSource, intDestination))
                     {
                         _paintBoard.Paint(_gameController.GameBoardState);
                     }
 
-                    else if (bearoffMove == true &&
+                    else if (bearoffMove &&
                              _gameController.MakeMove(_gameController.CurrentPlayer, intSource, strDestination))
                     {
                         _paintBoard.Paint(_gameController.GameBoardState);
                     }
-                    //}
-                    //else
-                    //{
-                    //    Console.WriteLine("Sorry you don't have any possible moves to make, changing turns");
-                    //    break;
-                    //}
                 }
             }
         }
@@ -198,8 +218,9 @@ namespace UICore
 
         public void StartGame()
         {
-            Console.WriteLine("Starting new game - Good Luck");
             Console.WriteLine("you can use !quit to quit the game at anytime");
+            Console.WriteLine("you can use !moves to see a list of possible moves");
+            Console.WriteLine("Starting new game - Good Luck");
             _paintBoard.Paint(_gameController.GameBoardState);
             WhosGonnaStart();
             while (!_stopGame)

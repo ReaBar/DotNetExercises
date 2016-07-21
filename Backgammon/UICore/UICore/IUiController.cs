@@ -1,6 +1,4 @@
-﻿using GameCore;
-
-namespace UICore
+﻿namespace UICore
 {
     public interface IUiController
     {

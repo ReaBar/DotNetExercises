@@ -1,4 +1,7 @@
-﻿namespace GameCore
+﻿using System;
+using System.Collections.Generic;
+
+namespace GameCore
 {
     public interface IGameController
     {
@@ -14,5 +17,8 @@
         void TurnStarts();
         bool AnyPossibleMoves { get; }
         bool IsGameOver();
+        HashSet<Tuple<int, int>> GetInboardPossibleMoves { get; }
+        HashSet<Tuple<string, int>> GetBarPossibleMoves { get; }
+        HashSet<Tuple<int, string>> GetBearingoffPossibleMoves { get; }
     }
 }

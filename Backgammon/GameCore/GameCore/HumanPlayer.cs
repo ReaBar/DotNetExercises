@@ -27,9 +27,5 @@ namespace GameCore
                     break;
             }
         }
-        public void MakeMove(int source, int destination)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
