@@ -8,7 +8,7 @@ namespace Ex2
 {
     class Queries
     {
-        public void PublicInterfaceInMscrelib()
+        public void PublicInterfaceInMscorlib()
         {
             Assembly mscorlib = typeof(string).Assembly;
 
@@ -28,13 +28,13 @@ namespace Ex2
         public void RunningProcesses()
         {
             var runningProcessesQuery =
-                Process.GetProcesses().Where(p => this.CheckProcessAccess(p) && p.Threads.Count < 5).OrderBy(p => p.Id).
-                Select(p => new
-                {
-                    ProccesName = p.ProcessName,
-                    ProcessId = p.Id,
-                    ProcessTime = p.StartTime
-                });
+                Process.GetProcesses().Where(p => IsProcessValid(p) && p.Threads.Count < 5).OrderBy(p => p.Id).
+                    Select(p => new
+                    {
+                        ProccesName = p.ProcessName,
+                        ProcessId = p.Id,
+                        ProcessTime = p.StartTime,
+                    });
 
             foreach (var runningProcess in runningProcessesQuery)
             {
@@ -42,11 +42,42 @@ namespace Ex2
             }
         }
 
-        private bool CheckProcessAccess(Process process)
+        public void RunningProcessesGroupBy()
+        {
+            var runningProcessesQueryGroupBy =
+                Process.GetProcesses().Where(p => IsProcessValid(p) && p.Threads.Count < 5)
+                    .OrderBy(p => p.Id)
+                    .GroupBy(p => new
+                    {
+                        ProccesName = p.ProcessName,
+                        ProcessId = p.Id,
+                        ProcessTime = p.StartTime,
+                        ProcessBasePriority = p.BasePriority
+                    }).OrderBy(g => g.Key.ProcessBasePriority).Select(g => new
+                    {
+                        ProcessName = g.Key.ProccesName,
+                        ProcessId = g.Key.ProcessId,
+                        ProcessStartTime = g.Key.ProcessTime,
+                        ProcessBasePriority = g.Key.ProcessBasePriority
+                    });
+
+            foreach (var processGroup in runningProcessesQueryGroupBy)
+            {
+                Console.WriteLine(processGroup);
+            }
+        }
+
+        public void TotalNumberOfThreads()
+        {
+            var totalNumberOfThreads = Process.GetProcesses().Select(p => p.Threads.Count).Sum();
+            Console.WriteLine($"Total number of threads: {totalNumberOfThreads}");
+        }
+
+        private bool IsProcessValid(Process process)
         {
             try
             {
-                var result = process.ProcessName;
+                var startTime = process.StartTime;
             }
 
             catch (Win32Exception e)
