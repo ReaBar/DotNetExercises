@@ -1,5 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 
 namespace XLinq
@@ -12,7 +16,6 @@ namespace XLinq
                 .Select(t => new XElement("Type", new XAttribute("FullName", t.FullName),
                     new XElement("Properties", t.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                         .Select(p => new XElement("Property", new XAttribute("Name", p.Name), new XAttribute("Type", p.PropertyType.Name))))));
-
         }
     }
 }

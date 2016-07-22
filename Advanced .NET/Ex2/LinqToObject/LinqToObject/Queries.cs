@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace Ex2
+namespace LinqToObject
 {
     class Queries
     {
@@ -90,3 +90,4 @@ namespace Ex2
         }
     }
 }
+

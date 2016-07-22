@@ -1,7 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
-namespace Ex2
+namespace LinqToObject
 {
     static class ObjectExtension
     {
@@ -10,9 +9,9 @@ namespace Ex2
             foreach (var sourceObj in source.GetType().GetProperties().Where(p => p.CanRead))
             {
                 var property = destination.GetType().GetProperty(sourceObj.Name);
-                if (property?.CanWrite == true)
+                if (property?.CanWrite == true && property.PropertyType == sourceObj.PropertyType)
                 {
-                    property.SetValue(destination, sourceObj.GetValue(source,null),null);
+                    property.SetValue(destination, sourceObj.GetValue(source, null), null);
                 }
             }
         }

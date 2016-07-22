@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex2
+﻿namespace LinqToObject
 {
     class Student
     {
         public string Name { get; set; }
         public int Age { get; set; }
         public double Average { get; set; }
-
         internal string Class { get; set; }
+        public int Discipline { get; set; }
 
         public override string ToString()
         {
             return
-                $"Student's name: {Name}\nStudent's Age: {Age}\nStudent's average: {Average}\nStudent's class: {Class}";
+                $"Student's name: {Name}\nStudent's Age: {Age}\nStudent's average: {Average}\nStudent's class: {Class}\nStudent's discipline: {Discipline}";
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex2
+﻿namespace LinqToObject
 {
     class Teacher
     {
@@ -12,10 +6,12 @@ namespace Ex2
         public int Age { get; set; }
         public string Class { get; set; }
         public decimal Salary { get; set; }
+        public string Discipline { get; set; }
+
 
         public override string ToString()
         {
-            return $"Teacher's name: {Name}\nTeacher's age: {Age}\nTeacher's class: {Class}\nTeacher's Salary: {Salary}";
+            return $"Teacher's name: {Name}\nTeacher's age: {Age}\nTeacher's class: {Class}\nTeacher's Salary: {Salary}\nTeacher's discipline: {Discipline}";
         }
     }
 }
