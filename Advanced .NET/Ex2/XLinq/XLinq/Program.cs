@@ -9,9 +9,9 @@ namespace XLinq
         static void Main(string[] args)
         {
             var linqToXml = Assembly.GetAssembly(typeof(string)).GetExportedTypes().Where(p => p.IsClass)
-                .Select(p => new XElement("Type", new XAttribute("FullName", p.FullName),
-                    new XElement("Properties", p.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                        .Select(t => new XElement("Property", new XAttribute("Name", t.Name), new XAttribute("Type", t.GetType()))))));
+                .Select(t => new XElement("Type", new XAttribute("FullName", t.FullName),
+                    new XElement("Properties", t.GetProperties(BindingFlags.Instance | BindingFlags.Public)
+                        .Select(p => new XElement("Property", new XAttribute("Name", p.Name), new XAttribute("Type", p.PropertyType.Name))))));
 
         }
     }
