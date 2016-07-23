@@ -56,9 +56,9 @@ namespace LinqToObject
                     }).OrderBy(g => g.Key.ProcessBasePriority).Select(g => new
                     {
                         ProcessName = g.Key.ProccesName,
-                        ProcessId = g.Key.ProcessId,
+                        g.Key.ProcessId,
                         ProcessStartTime = g.Key.ProcessTime,
-                        ProcessBasePriority = g.Key.ProcessBasePriority
+                        g.Key.ProcessBasePriority
                     });
 
             foreach (var processGroup in runningProcessesQueryGroupBy)
