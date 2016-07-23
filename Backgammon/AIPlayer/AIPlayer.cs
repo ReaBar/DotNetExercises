@@ -1,16 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
+using GameCore;
 
-namespace GameCore
+namespace AIPlayer
 {
-    public class HumanPlayer : IPlayer
+    internal class AiPlayer : IPlayer
     {
         public GameCheckers GameCheckerColor { get; }
         public PlayerCondition PlayerState { get; set; }
         public ConsoleColor GameCheckerConsoleColor { get; }
+        public bool IsPlayerAi { get; set; }
 
-        public HumanPlayer(GameCheckers checkerColor)
+        public AiPlayer(GameCheckers checkerColor)
         {
             PlayerState = PlayerCondition.Regular;
+            IsPlayerAi = true;
             switch (checkerColor)
             {
                 case GameCheckers.White:
@@ -22,6 +26,18 @@ namespace GameCore
                     GameCheckerConsoleColor = ConsoleColor.Red;
                     break;
             }
+        }
+
+        public Tuple<object, object> MakeMove(HashSet<Tuple<object, object>> possibleMoves)
+        {
+            Random rand = new Random();
+            List<Tuple<object,object>> moves = new List<Tuple<object, object>>();
+            foreach (var possibleMove in possibleMoves)
+            {
+                   moves.Add(possibleMove);
+            }
+
+            return moves[rand.Next(0, moves.Count)];
         }
     }
 }

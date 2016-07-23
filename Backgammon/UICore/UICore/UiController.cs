@@ -9,7 +9,7 @@ namespace UICore
         private readonly UiDice _dice;
         private readonly IPaintBoard _paintBoard;
         private bool _stopGame = false;
-        private string _noPossibleMoves = "Sorry you don't have any possible moves to make, changing turns";
+        private const string NoPossibleMoves = "Sorry you don't have any possible moves to make, changing turns";
 
         public UiController(IGameController gameController)
         {
@@ -51,7 +51,7 @@ namespace UICore
 
             if (!_gameController.AnyPossibleMoves)
             {
-                Console.WriteLine(_noPossibleMoves);
+                Console.WriteLine(NoPossibleMoves);
             }
             else
             {
@@ -72,6 +72,7 @@ namespace UICore
                         {
                             Console.WriteLine(
                                 "From where would you like to move and where to (please write source, destination for example 1, 4 or bar, 5 or 19, out)");
+
                             var moves = Console.ReadLine();
                             if (string.IsNullOrWhiteSpace(moves)) continue;
                             if (moves.Equals("!quit"))
@@ -127,7 +128,7 @@ namespace UICore
 
                         else if(!_gameController.IsGameOver())
                         {
-                            Console.WriteLine(_noPossibleMoves);
+                            Console.WriteLine(NoPossibleMoves);
                         }
 
                     } while (movesArr.Length != 2 && (!ingameBoardMoves || !barMove || !bearoffMove));
