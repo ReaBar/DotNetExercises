@@ -86,20 +86,15 @@ namespace UICore
                                     foreach (var bearingoffPossibleMove in _gameController.GetBearingoffPossibleMoves)
                                     {
                                         Console.WriteLine(
-                                            $"from {bearingoffPossibleMove.Item1 + 1} to {bearingoffPossibleMove.Item2}");
+                                            $"from {bearingoffPossibleMove.Item1} to {bearingoffPossibleMove.Item2}");
                                     }
 
                                     foreach (var barPossibleMove in _gameController.GetBarPossibleMoves)
                                     {
-                                        if (_gameController.CurrentPlayer.GameCheckerColor.Equals(GameCheckers.Red))
-                                        {
-                                            Console.WriteLine($"from {barPossibleMove.Item1} to {barPossibleMove.Item2}");
-                                        }
-                                        else
-                                        {
-                                            Console.WriteLine(
-                                                $"from {barPossibleMove.Item1} to {barPossibleMove.Item2 + 1}");
-                                        }
+                                        Console.WriteLine(
+                                            _gameController.CurrentPlayer.GameCheckerColor.Equals(GameCheckers.Red)
+                                                ? $"from {barPossibleMove.Item1} to {barPossibleMove.Item2}"
+                                                : $"from {barPossibleMove.Item1} to {barPossibleMove.Item2 + 1}");
                                     }
 
                                     foreach (var inboardPossibleMove in _gameController.GetInboardPossibleMoves)
@@ -130,7 +125,7 @@ namespace UICore
                             }
                         }
 
-                        else
+                        else if(!_gameController.IsGameOver())
                         {
                             Console.WriteLine(_noPossibleMoves);
                         }

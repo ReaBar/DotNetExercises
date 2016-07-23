@@ -3,7 +3,7 @@ using UICore;
 
 namespace BackgammonDriver
 {
-    class Program
+    public class Program
     {
         enum GamePlayers
         {

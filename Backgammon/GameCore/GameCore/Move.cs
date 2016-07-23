@@ -133,7 +133,7 @@ namespace GameCore
 
             if (source >= 0 && source < 24 && GameBoardState.BoardPointsState[source].GameCheckersOnSpot.Equals(player.GameCheckerColor))
             {
-                source = player.GameCheckerColor.Equals(GameCheckers.Red) ? 24 - source: source;
+                source = player.GameCheckerColor.Equals(GameCheckers.Red) ? 24 - source: source + 1;
                 if ((source <= _dice.FirstDice && !_dice.FirstDicePlayed) ||
                      (source <= _dice.SecondDice && !_dice.SecondDicePlayed))
                 {
@@ -382,7 +382,7 @@ namespace GameCore
                             {
                                 if (IsMoveLegalBearingOffState(player, i))
                                 {
-                                    Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
+                                    Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i+1, "out");
                                     _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
                                 }
                             }
@@ -398,7 +398,7 @@ namespace GameCore
                             {
                                 if (IsMoveLegalBearingOffState(player, i))
                                 {
-                                    Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i, "out");
+                                    Tuple<int, string> bearingoffPossibleMove = new Tuple<int, string>(i + 1, "out");
                                     _bearingoffPossibleMoves.Add(bearingoffPossibleMove);
                                 }
                             }
