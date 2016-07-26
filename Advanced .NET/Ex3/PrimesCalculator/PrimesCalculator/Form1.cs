@@ -28,7 +28,8 @@ namespace PrimesCalculator
 
         private async void button1_Click(object sender, EventArgs e)
         {
-            if (int.TryParse(textBox2.Text, out _minValue) && int.TryParse(textBox1.Text,out _maxValue) && _minValue >= 2 && _minValue <= _maxValue)
+            if (int.TryParse(textBox2.Text, out _minValue) && int.TryParse(textBox1.Text, out _maxValue) &&
+                _minValue >= 2 && _minValue <= _maxValue)
             {
                 if (listBox1.Items.Count != 0)
                 {
@@ -42,6 +43,11 @@ namespace PrimesCalculator
                     listBox1.Items.Add(prime);
                 }
                 listBox1.EndUpdate();
+            }
+
+            else
+            {
+                MessageBox.Show("Invalid Input!");
             }
         }
 
