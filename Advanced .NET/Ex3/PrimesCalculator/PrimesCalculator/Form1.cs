@@ -21,11 +21,6 @@ namespace PrimesCalculator
             _primeNumbers = new PrimeNumbers();
         }
 
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private async void button1_Click(object sender, EventArgs e)
         {
             if (int.TryParse(textBox2.Text, out _minValue) && int.TryParse(textBox1.Text, out _maxValue) &&
@@ -49,30 +44,6 @@ namespace PrimesCalculator
             {
                 MessageBox.Show("Invalid Input!");
             }
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }
