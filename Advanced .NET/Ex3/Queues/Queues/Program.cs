@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Queues
 {
@@ -10,7 +7,24 @@ namespace Queues
     {
         static void Main(string[] args)
         {
+            Random rand = new Random();
+            int maxSize = 3;
+            LimitedQueue<int> limitedQueue = new LimitedQueue<int>(maxSize);
+            for (int i = 0; i < 30; i++)
+            {
+                var randomNum = rand.Next(0,100);
+                Console.WriteLine(randomNum);
+                if (randomNum % 2 == 0)
+                {
+                    var i1 = i;
+                    ThreadPool.QueueUserWorkItem(x => limitedQueue.Enqueue(i1));
+                }
 
+                else
+                {
+                   ThreadPool.QueueUserWorkItem(x => limitedQueue.Dequeue());
+                }
+            }
         }
     }
 }
