@@ -8,12 +8,14 @@ namespace Queues
         static void Main(string[] args)
         {
             Random rand = new Random();
-            int maxSize = 3;
+            int maxSize = 5;
             LimitedQueue<int> limitedQueue = new LimitedQueue<int>(maxSize);
-            for (int i = 0; i < 30; i++)
+
+            for (int i = 0; i < 20; i++)
             {
                 var randomNum = rand.Next(0,100);
                 Console.WriteLine(randomNum);
+                
                 if (randomNum % 2 == 0)
                 {
                     var i1 = i;
