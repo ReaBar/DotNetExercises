@@ -35,7 +35,7 @@ namespace Queues
         public T Dequeue()
         {
             _readersSemaphore.WaitOne();
-            T item = default(T);
+            T item;
 
             lock (_queue)
             {
