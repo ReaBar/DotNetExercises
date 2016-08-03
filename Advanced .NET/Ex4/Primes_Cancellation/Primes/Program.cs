@@ -9,24 +9,25 @@ namespace Primes
     {
         static void Main(string[] args)
         {
-            List<long> primeList = CalcPrimes(2, 1000, -1);
-            foreach (var l in primeList)
-            {
-                Console.WriteLine("prime: " + l);
-            }
+            List<long> primeList = CalcPrimes(2, 30000000);
+            Console.WriteLine("Number of primes found before canceled: " + primeList.Count);
         }
 
-        public static List<long> CalcPrimes(int subtracted, int subtrahend, int degreeOfParallelism)
+        public static List<long> CalcPrimes(int subtracted, int subtrahend)
         {
             List<long> primesList = new List<long>();
-            Stopwatch sw = Stopwatch.StartNew();
-            sw.Start();
+            Random rand=  new Random();
+                      
             if (subtracted > 1 && subtrahend > 1 && subtrahend > subtracted)
             {
                 Parallel.For(subtracted, subtrahend,
-                    new ParallelOptions() {MaxDegreeOfParallelism = degreeOfParallelism > 0 ? degreeOfParallelism : -1},
-                    i =>
+                    (i,state) =>
                     {
+                        if (rand.Next(10000000) == 0)
+                        {
+                            state.Stop();
+                        }
+
                         if ((Convert.ToInt32(i) & 1) == 0)
                         {
                             if (Convert.ToInt32(i) == 2)
@@ -57,8 +58,6 @@ namespace Primes
                         }
                     });
             }
-            sw.Stop();
-            Console.WriteLine(sw.ElapsedMilliseconds);
             return primesList;
         }
     }
