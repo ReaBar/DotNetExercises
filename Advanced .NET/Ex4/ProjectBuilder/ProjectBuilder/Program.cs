@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -47,11 +44,25 @@ namespace ProjectBuilder
                     Console.WriteLine("fifth project finished");
                 });
 
-            var sixProject = Task.Factory.ContinueWhenAll(new Task[] {fourthProject, thirdProject}, completedTasks =>
+            var sixthProject = Task.Factory.ContinueWhenAll(new Task[] {fourthProject, thirdProject}, completedTasks =>
             {
                 Console.WriteLine("sixth project is running");
                 Thread.Sleep(1000);
                 Console.WriteLine("sixth project finished");
+            });
+
+            var seventhProject = Task.Factory.ContinueWhenAll(new Task[] {fifthProject, sixthProject}, completedTasks =>
+            {
+                Console.WriteLine("seventh project is running");
+                Thread.Sleep(1000);
+                Console.WriteLine("seventh project finished");
+            });
+
+            var eighthProject = fifthProject.ContinueWith(t =>
+            {
+                Console.WriteLine("eighth project is running");
+                Thread.Sleep(1000);
+                Console.WriteLine("eighth project finished");
             });
 
 
@@ -60,8 +71,9 @@ namespace ProjectBuilder
             thirdProject.Start();
             fourthProject.Wait();
             fifthProject.Wait();
-            sixProject.Wait();
-
+            sixthProject.Wait();
+            seventhProject.Wait();
+            eighthProject.Wait();
         }
     }
 }
