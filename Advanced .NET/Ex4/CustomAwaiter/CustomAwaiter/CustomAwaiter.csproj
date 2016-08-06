@@ -44,7 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomIntAwaiter.cs" />
+    <Compile Include="CustomProcessAwaiter.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="IntAwaitable.cs" />
+    <Compile Include="ProcessAwaitable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

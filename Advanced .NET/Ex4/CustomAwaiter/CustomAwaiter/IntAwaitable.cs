@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CustomAwaiter
@@ -6,6 +7,9 @@ namespace CustomAwaiter
     class IntAwaitable
     {
         private CustomIntAwaiter _awaiter;
+
+        public IntAwaitable()
+        {}
 
         private IntAwaitable(CustomIntAwaiter awaiter)
         {
