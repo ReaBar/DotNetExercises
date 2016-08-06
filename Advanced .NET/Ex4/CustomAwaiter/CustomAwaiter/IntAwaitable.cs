@@ -1,25 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace CustomAwaiter
 {
     class IntAwaitable
     {
-        private readonly int _millisecondsDelay = 0;
+        private CustomIntAwaiter _awaiter;
 
-        public IntAwaitable(int millisecondsDelay)
+        private IntAwaitable(CustomIntAwaiter awaiter)
         {
-            _millisecondsDelay = millisecondsDelay;
+            _awaiter = awaiter;
         }
 
-        public CustomIntAwaiter GetAwaiter()
+        public IntAwaitable Wait(int milliseconds)
         {
-            Thread.Sleep(_millisecondsDelay);
-            return new CustomIntAwaiter();
+            var awaiter = new CustomIntAwaiter();
+
+            Task.Run(() =>
+            {
+                Thread.Sleep(milliseconds);
+                awaiter.SetCompleted();
+            });
+
+            return new IntAwaitable(awaiter);
         }
+
+        public CustomIntAwaiter GetAwaiter() => _awaiter;
     }
 }
