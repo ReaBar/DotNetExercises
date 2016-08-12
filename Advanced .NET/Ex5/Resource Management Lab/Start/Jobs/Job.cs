@@ -1,103 +1,130 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 
-namespace Jobs {
-	static class NativeJob {
-		[DllImport("kernel32")]
-		public static extern IntPtr CreateJobObject(IntPtr sa, string name);
+namespace Jobs
+{
+    static class NativeJob
+    {
+        [DllImport("kernel32")]
+        public static extern IntPtr CreateJobObject(IntPtr sa, string name);
 
-		[DllImport("kernel32", SetLastError = true)]
-		public static extern bool AssignProcessToJobObject(IntPtr hjob, IntPtr hprocess);
+        [DllImport("kernel32", SetLastError = true)]
+        public static extern bool AssignProcessToJobObject(IntPtr hjob, IntPtr hprocess);
 
-		[DllImport("kernel32")]
-		public static extern bool CloseHandle(IntPtr h);
+        [DllImport("kernel32")]
+        public static extern bool CloseHandle(IntPtr h);
 
-		[DllImport("kernel32")]
-		public static extern bool TerminateJobObject(IntPtr hjob, uint code);
-}
+        [DllImport("kernel32")]
+        public static extern bool TerminateJobObject(IntPtr hjob, uint code);
+    }
 
-	public class Job : IDisposable{
-		private IntPtr _hJob;
-		private List<Process> _processes;
-	    private bool _disposed;
+    public class Job : IDisposable
+    {
+        private readonly IntPtr _hJob;
+        private readonly List<Process> _processes;
+        private bool _disposed;
+        private readonly uint _sizeInBytes = 0;
 
-		public Job(string name)
-		{
-            //TODO to make sure this is what they ment when they said "b.	If the handle is zero (IntPtr.Zero), throw an InvalidOperationException"
-            if (IntPtr.Zero == null)
-		    {
-		        throw new InvalidOperationException();
-		    }
-
-		    _hJob = NativeJob.CreateJobObject(IntPtr.Zero, name);
+        public Job(string name)
+        {
+            _hJob = NativeJob.CreateJobObject(IntPtr.Zero, name);
+            if (_hJob.ToInt32() == 0)
+            {
+                throw new InvalidOperationException();
+            }
             _processes = new List<Process>();
-		}
+        }
 
-		public Job()
-			: this(null) {
-		}
+        public Job(uint sizeInBytes)
+        {
+            if(sizeInBytes == 0) return;
+            _sizeInBytes = sizeInBytes;
+            CreateJobWithBytes();
+        }
 
-		protected void AddProcessToJob(IntPtr hProcess) {
-			CheckIfDisposed();
+        public Job()
+            : this(null)
+        {
+        }
 
-			if(!NativeJob.AssignProcessToJobObject(_hJob, hProcess))
-				throw new InvalidOperationException("Failed to add process to job");
-		}
+        private void CreateJobWithBytes()
+        {
+            GC.AddMemoryPressure(_sizeInBytes);
+            Console.WriteLine($"Job {_sizeInBytes} was created.");
+        }
 
-	    private void CheckIfDisposed()
-	    {
-	        throw new NotImplementedException();
-	    }
+        protected void AddProcessToJob(IntPtr hProcess)
+        {
+            CheckIfDisposed();
 
-	    public void AddProcessToJob(int pid) {
-	        if (_disposed)
-	        {
-	            throw new ObjectDisposedException(typeof(Job).ToString());
-	        }
-			AddProcessToJob(Process.GetProcessById(pid));
-		}
+            if (!NativeJob.AssignProcessToJobObject(_hJob, hProcess))
+            {
+                Console.WriteLine(new Win32Exception(Marshal.GetLastWin32Error()).Message);
+                throw new InvalidOperationException("Failed to add process to job");
+            }
+        }
 
-		public void AddProcessToJob(Process proc) {
+        private void CheckIfDisposed()
+        {
             if (_disposed)
             {
                 throw new ObjectDisposedException(typeof(Job).ToString());
             }
+        }
+
+        public void AddProcessToJob(int pid)
+        {
+            CheckIfDisposed();
+            AddProcessToJob(Process.GetProcessById(pid));
+        }
+
+        public void AddProcessToJob(Process proc)
+        {
+            CheckIfDisposed();
             Debug.Assert(proc != null);
-			AddProcessToJob(proc.Handle);
-			_processes.Add(proc);
-		}
+            AddProcessToJob(proc.Handle);
+            _processes.Add(proc);
+        }
 
-		public void Kill()
-		{
-		    NativeJob.TerminateJobObject(IntPtr.Zero, 0);
-		}
+        public void Kill()
+        {
+            NativeJob.TerminateJobObject(_hJob, 0);
+            Dispose();
+            NativeJob.CloseHandle(_hJob);
+        }
 
-	    public void Dispose()
-	    {
-	        if (!_disposed)
-	        {
-                _disposed = true;
-                Dispose(_disposed);
-                GC.SuppressFinalize(this);
-	        }
-	    }
+        public void Dispose()
+        {
+            CheckIfDisposed();
+            _disposed = true;
+            Dispose(_disposed);
+            GC.SuppressFinalize(this);
+        }
 
-	    protected virtual void Dispose(bool disposing)
-	    {
+        protected virtual void Dispose(bool disposing)
+        {
             if (disposing)
             {
-                if (_processes != null)
-                {
-                    foreach (var process in _processes)
-                    {
-                        process.Dispose();
-                    }
-                }
+                if (_processes == null) return;
+                _processes.ForEach(p => { p.Dispose(); });
+                _processes.Clear();
             }
         }
-	}
+
+        ~Job()
+        {
+            try
+            {
+                GC.RemoveMemoryPressure(_sizeInBytes);
+                Console.WriteLine($"Job {_sizeInBytes} was released");
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Console.WriteLine($"Caught ArugumentOutOfRaneException: {e.Message}");
+            }
+        }
+    }
 }

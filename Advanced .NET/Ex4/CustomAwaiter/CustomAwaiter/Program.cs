@@ -11,7 +11,7 @@ namespace CustomAwaiter
         {
             var helper = new Helper();
             helper.IntDelay(1000);
-            helper.ProcessAwaiter(Process.GetCurrentProcess());
+            helper.ProcessAwaiter(Process.GetProcessById(6724));
             Console.ReadLine();
         }
     }
